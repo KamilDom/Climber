@@ -6,9 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 
-/**
- * Created by Kamil on 26.03.2017.
- */
+// Klasa odpowiedzialna za menu
 
 class MenuScene implements Scene {
 

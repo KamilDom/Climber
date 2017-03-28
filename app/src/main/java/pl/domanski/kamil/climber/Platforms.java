@@ -7,9 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-/**
- * Created by Kamil on 19.03.2017.
- */
+// Klasa w której zdefiniowane są parametry platform. Jeden obiekt tej klasy - jedna platforma
 
 public class Platforms implements GameObject {
 
@@ -48,7 +46,7 @@ public class Platforms implements GameObject {
 
 
         rectangle = new Rect(startX, startY, startX + platformWidth, startY + platformHeight);
-        platformType=platType;
+        platformType = platType;
 
 
     }
@@ -68,46 +66,41 @@ public class Platforms implements GameObject {
     }
 
     @Override
-    public void draw(Canvas canvas){
+    public void draw(Canvas canvas) {
 
         Paint paint = new Paint();
         paint.setColor(Color.RED);
-        if(platformType==0) {
+        if (platformType == 0) {
             paint.setColor(Color.BLUE);
-          //  canvas.drawRect(rectangle, paint);
+            //  canvas.drawRect(rectangle, paint);
             canvas.drawBitmap(platform2, null, rectangle, paint);
-        }
-        else if(platformType ==2 ){
+        } else if (platformType == 2) {
             paint.setColor(Color.BLACK);
             canvas.drawBitmap(platform3, null, rectangle, paint);
-      //  canvas.drawRect(rectangle, paint);
+            //  canvas.drawRect(rectangle, paint);
 
-            }
-        else {
+        } else {
             paint.setColor(Color.GREEN);
             canvas.drawBitmap(platform2, null, rectangle, paint);
             //canvas.drawRect(rectangle, paint);
-           movingPlatform();
+            movingPlatform();
         }
     }
 
     private void movingPlatform() {
 
-        if(direction ==0 )
-        {
-            rectangle.right+=6;
-            rectangle.left+=6;
-            howFar -=6;
-            if (howFar<0)
-                direction=1;
-        }
-
-        else {
-            rectangle.right-=6;
-            rectangle.left-=6;
-            howFar +=6;
-            if (howFar>400)
-                direction=0;
+        if (direction == 0) {
+            rectangle.right += 6;
+            rectangle.left += 6;
+            howFar -= 6;
+            if (howFar < 0)
+                direction = 1;
+        } else {
+            rectangle.right -= 6;
+            rectangle.left -= 6;
+            howFar += 6;
+            if (howFar > 400)
+                direction = 0;
         }
 
 

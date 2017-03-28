@@ -11,12 +11,11 @@ import java.util.ArrayList;
 
 public class SceneManager {
 
-    public static final int MENUSTATE =0;
-    public static final int GAMESTATE =1;
-    private  int ACTIVE_SCENE =1;
+    public static final int MENUSTATE = 0;
+    public static final int GAMESTATE = 1;
+    private int ACTIVE_SCENE = 1;
 
     private ArrayList<Scene> scenes = new ArrayList<>();
-
 
 
     public SceneManager() {
@@ -26,21 +25,21 @@ public class SceneManager {
 
     }
 
-    public void setScene(int scene){
+    public void setScene(int scene) {
         ACTIVE_SCENE = scene;
     }
 
-    public void recieveTouch(MotionEvent event){
+    public void recieveTouch(MotionEvent event) {
 
         scenes.get(ACTIVE_SCENE).recieveTouch(event);
     }
 
-    public void update(){
-       // ACTIVE_SCENE = scenes.get(ACTIVE_SCENE).changeScene(this);
+    public void update() {
+        // ACTIVE_SCENE = scenes.get(ACTIVE_SCENE).changeScene(this);
         scenes.get(ACTIVE_SCENE).update();
     }
 
-    public void draw(Canvas canvas){
+    public void draw(Canvas canvas) {
 
         scenes.get(ACTIVE_SCENE).draw(canvas);
     }

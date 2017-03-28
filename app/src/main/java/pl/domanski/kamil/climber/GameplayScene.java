@@ -10,9 +10,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
-/**
- * Created by Kamil on 19.03.2017.
- */
+//Główna klasa gameplayu
 
 public class GameplayScene implements Scene {
 
@@ -71,12 +69,10 @@ public class GameplayScene implements Scene {
 
     @Override
     public void terminate() {
-        //   SceneManager.ACTIVE_SCENE = 0;
+
         gameOver = true;
 
     }
-
-
 
 
     @Override

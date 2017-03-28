@@ -2,9 +2,7 @@ package pl.domanski.kamil.climber;
 
 import android.content.Context;
 
-/**
- * Created by Kamil on 19.03.2017.
- */
+// Przechowywanie stałych tzn: wymiaru ekranu, kontekstu
 
 public class Constans {
     public static int SCREEN_WIDTH;

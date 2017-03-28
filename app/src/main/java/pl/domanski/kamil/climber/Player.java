@@ -13,7 +13,7 @@ import android.graphics.Rect;
  * Created by Kamil on 19.03.2017.
  */
 
-public class Player implements GameObject{
+public class Player implements GameObject {
 
     private Rect rectangle;
     private int color;
@@ -29,20 +29,17 @@ public class Player implements GameObject{
     private float VectorTime;
     public int jumpState = 0; // 1 fall
 
-    public int p=0;
+    public int p = 0;
 
-    public Rect getRectangle()
-    {
+    public Rect getRectangle() {
         return rectangle;
     }
 
-    public Player(Rect rectangle, int color,  int JumpVectorLenght)
-    {
+    public Player(Rect rectangle, int color, int JumpVectorLenght) {
         this.rectangle = rectangle;
-        this.color=color;
+        this.color = color;
         this.jumpVectorLenght = JumpVectorLenght;
-        jumpVector =  jumpVectorLenght;
-
+        jumpVector = jumpVectorLenght;
 
 
         BitmapFactory bf = new BitmapFactory();
@@ -54,8 +51,8 @@ public class Player implements GameObject{
                 R.drawable.alienblue_walk2y);
 
 
-        idle = new Animation(new Bitmap[]{idleImg},2);
-        walkRight = new Animation(new Bitmap[]{walk1,walk2},0.4f );
+        idle = new Animation(new Bitmap[]{idleImg}, 2);
+        walkRight = new Animation(new Bitmap[]{walk1, walk2}, 0.4f);
 
 
         Matrix m = new Matrix();
@@ -83,16 +80,15 @@ public class Player implements GameObject{
         animManager.update();
     }
 
-    public void update(Point point)
-    {
+    public void update(Point point) {
         float oldLeft = rectangle.left;
 
-        rectangle.set(point.x-rectangle.width()/2,point.y-rectangle.height()/2, point.x+rectangle.width()/2,point.y+rectangle.height()/2);
+        rectangle.set(point.x - rectangle.width() / 2, point.y - rectangle.height() / 2, point.x + rectangle.width() / 2, point.y + rectangle.height() / 2);
 
         int state = 0;
-        if(rectangle.left - oldLeft > 3 )
+        if (rectangle.left - oldLeft > 3)
             state = 1;
-        else if(rectangle.left - oldLeft <-3)
+        else if (rectangle.left - oldLeft < -3)
             state = 2;
 
         animManager.playAnim(state);
@@ -100,16 +96,15 @@ public class Player implements GameObject{
 
     }
 
-    public void jump(){
+    public void jump() {
         jumpState = 0;
         jumpVector = jumpVectorLenght;
 
     }
 
-    public void jump(int extraJump){
+    public void jump(int extraJump) {
         jumpState = 0;
         jumpVector = extraJump;
-
     }
 
 
@@ -117,13 +112,10 @@ public class Player implements GameObject{
 
 
         if (jumpState == 0) {
-
-                jumpVector--;
+            jumpVector--;
 
             if (jumpVector == 0) {
                 jumpState = 1;
-
-
             }
 
             return jumpVector;
@@ -131,15 +123,10 @@ public class Player implements GameObject{
         }
 
         else if (jumpState == 1) {
-
-
-
-                    jumpVector++;
-                    if (jumpVector > 200) return jumpVector;
-                    return -jumpVector;
-
-
-            }
+            jumpVector++;
+            if (jumpVector > 200) return jumpVector;
+            return -jumpVector;
+        }
 
         return jumpVector;
     }

@@ -3,11 +3,9 @@ package pl.domanski.kamil.climber;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-/**
- * Created by Kamil on 19.03.2017.
- */
+// Klasa odpowiedzialna za główny wątek gry - zegar
 
-public class MainThread extends Thread{
+public class MainThread extends Thread {
 
     public static final int MAX_FPS = 200;
     public double averageFPS;

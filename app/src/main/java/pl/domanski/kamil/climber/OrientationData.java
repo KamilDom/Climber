@@ -6,9 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-/**
- * Created by Kamil on 19.03.2017.
- */
+// Klasa odpowiedzialna za odczyt danych z sensorów, potrzebnych do sterowania postacią
 
 public class OrientationData implements SensorEventListener {
 
