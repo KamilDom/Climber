@@ -33,6 +33,7 @@ public class GameplayScene implements Scene {
 
 
     private boolean gameOver = false;
+    private boolean pause = false;
     private long gameOverTime;
 
     private OrientationData orientationData;
@@ -63,7 +64,7 @@ public class GameplayScene implements Scene {
         playerPoint.x = Constans.SCREEN_WIDTH / 2;
         playerPoint.y = 3 * Constans.SCREEN_HEIGHT / 4;
         player.update(playerPoint);
-        //player.jump();
+;
 
     }
 
@@ -80,7 +81,7 @@ public class GameplayScene implements Scene {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                if (gameOver && System.currentTimeMillis() - gameOverTime >= 2000) {
+                if (gameOver && System.currentTimeMillis() - gameOverTime >= 500) {
                     sceneManager.setScene(0);
                     reset();
                     gameOver = false;
@@ -99,8 +100,6 @@ public class GameplayScene implements Scene {
         canvas.drawColor(Color.rgb(91, 173, 235));
 
 
-        // canvas.drawBitmap(sky, 0,0,paint);
-
 
         platformsManager.draw(canvas);
         player.draw(canvas);
@@ -116,13 +115,21 @@ public class GameplayScene implements Scene {
 
         }
 
+        if (sceneManager.PAUSESTATE && !gameOver){
+            paint.setColor(Color.rgb(0 ,198,50));
+            canvas.drawRect(Constans.SCREEN_WIDTH/9, Constans.SCREEN_HEIGHT/9, Constans.SCREEN_WIDTH*8/9, Constans.SCREEN_HEIGHT*8/9, paint);
+            paint.setTextSize(100);
+            paint.setColor(Color.MAGENTA);
+            drawCenterText(canvas, paint, "Pause");
+        }
+
 
     }
 
     @Override
     public void update() {
 
-        if (!gameOver) {
+        if (!gameOver && !sceneManager.PAUSESTATE) {
 
             if (frameTime < Constans.INIT_TIME)
                 frameTime = Constans.INIT_TIME;

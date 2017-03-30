@@ -15,7 +15,7 @@ import android.view.SurfaceView;
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     private MainThread thread;
-    private SceneManager manager;
+    private static SceneManager manager;
     Paint paint = new Paint();
 
     public GamePanel(Context context){
@@ -81,5 +81,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         paint.setColor(Color.YELLOW);
         canvas.drawText("FPS: " + String.valueOf(thread.averageFPS),Constans.SCREEN_WIDTH-300,50,paint);
     }
+
+    public static void OnBackPressed() {
+        manager.OnBackPressed();
+    }
+
 
 }

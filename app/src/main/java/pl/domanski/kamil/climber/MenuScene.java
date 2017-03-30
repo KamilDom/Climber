@@ -14,6 +14,7 @@ class MenuScene implements Scene {
     private Rect r;
     private Rect NewGameRect;
     private Rect Exit;
+    private Rect About;
 
     protected SceneManager sceneManager;
 
@@ -24,6 +25,8 @@ class MenuScene implements Scene {
         paint = new Paint();
         r = new Rect();
         NewGameRect = new Rect();
+        Exit = new Rect();
+        About = new Rect();
     }
 
     @Override
@@ -42,21 +45,24 @@ class MenuScene implements Scene {
         paint.setTextSize(Constans.SCREEN_WIDTH/5);
         drawCenterText(canvas, paint, "Climber", Constans.SCREEN_HEIGHT/5);
 
-    //    canvas.drawRect(0,Constans.SCREEN_HEIGHT/5,Constans.SCREEN_WIDTH, Constans.SCREEN_HEIGHT*2/5, paint);
+
 
         paint.setColor(Color.DKGRAY);
 
         NewGameRect = getTextRect(canvas, "New Game", Constans.SCREEN_HEIGHT/3, Constans.SCREEN_WIDTH/8);
         canvas.drawRect(getTextRect(canvas, "New Game", Constans.SCREEN_HEIGHT/3, Constans.SCREEN_WIDTH/8), paint);
 
-        Exit = getTextRect(canvas, "Exit", Constans.SCREEN_HEIGHT/2, Constans.SCREEN_WIDTH/8);
-        canvas.drawRect(getTextRect(canvas, "Exit", Constans.SCREEN_HEIGHT/2, Constans.SCREEN_WIDTH/8), paint);
+        About = getTextRect(canvas, "About", Constans.SCREEN_HEIGHT/2, Constans.SCREEN_WIDTH/8);
+        canvas.drawRect(getTextRect(canvas, "About", Constans.SCREEN_HEIGHT/2, Constans.SCREEN_WIDTH/8), paint);
+
+        Exit = getTextRect(canvas, "Exit", Constans.SCREEN_HEIGHT*2/3, Constans.SCREEN_WIDTH/8);
+        canvas.drawRect(getTextRect(canvas, "Exit", Constans.SCREEN_HEIGHT*2/3, Constans.SCREEN_WIDTH/8), paint);
 
         paint.setColor(Color.WHITE);
 
         drawCenterText(canvas, paint, "New Game", Constans.SCREEN_HEIGHT/3);
-
-        drawCenterText(canvas, paint, "Exit", Constans.SCREEN_HEIGHT/2);
+        drawCenterText(canvas, paint, "About", Constans.SCREEN_HEIGHT/2);
+        drawCenterText(canvas, paint, "Exit", Constans.SCREEN_HEIGHT*2/3);
 
 
 
@@ -74,6 +80,10 @@ class MenuScene implements Scene {
     public void recieveTouch(MotionEvent event) {
         if(NewGameRect.contains((int)event.getX(), (int)event.getY()) ){
             sceneManager.setScene(1);
+        }
+
+        else if(About.contains((int)event.getX(), (int)event.getY()) ){
+            sceneManager.setScene(2);
         }
 
         else if(Exit.contains((int)event.getX(), (int)event.getY()) ){

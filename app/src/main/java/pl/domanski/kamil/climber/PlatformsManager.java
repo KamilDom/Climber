@@ -23,6 +23,7 @@ public class PlatformsManager {
     private long startTime;
     private long initTime;
 
+    private int xStart;
     public int score = 0;
 
     Random rand;
@@ -58,7 +59,6 @@ public class PlatformsManager {
     public boolean playerCollide(Player player) {
         indexColide = -1;
 
-        // for(Platforms ob : platforms){
         for (int i = 0; i < platforms.size() + 1; i++) {
             indexColide++;
             if (indexColide == platforms.size()) {
@@ -87,11 +87,24 @@ public class PlatformsManager {
         platforms.add(new Platforms(platformHeight, Constans.SCREEN_WIDTH, 0, Constans.SCREEN_HEIGHT - platformHeight, 0));
         platforms.get(0).platformType = 0;
         int currY = (int) (-Constans.SCREEN_HEIGHT * 3 / 4);
+
+
         while (currY < 0) {
-            int xStart = rand.nextInt(Constans.SCREEN_WIDTH - platformWidth);
+            xStart = rand.nextInt(Constans.SCREEN_WIDTH - platformWidth);
+
+            while (Math.abs(lastX - xStart) < Constans.SCREEN_WIDTH / 5){
+                xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH - platformWidth));
+            }
+
+
+            lastX = xStart;
             int y = rand.nextInt(100);
             platforms.add(0, new Platforms(platformHeight, platformWidth, xStart, (-300 + platforms.get(0).getRectangle().top - y), randPlatformType()));
-            movPlatPosContr();
+            if (platforms.get(0).platformType == 1) {
+
+                GenerateMovingPlatformPostition();
+
+            }
             currY += platformHeight + y;
         }
 
@@ -123,7 +136,7 @@ public class PlatformsManager {
         }
 
 
-        int xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH - platformWidth));
+        xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH - platformWidth));
 
         while (Math.abs(lastX - xStart) < Constans.SCREEN_WIDTH / 5)
 
@@ -142,24 +155,27 @@ public class PlatformsManager {
         platforms.get(0).platformType = randPlatformType();
         if (platforms.get(0).platformType == 1) {
 
-            movPlatPosContr();
-            platforms.get(0).direction = 0;
+            GenerateMovingPlatformPostition();
+
+        }
+
+        else if(platforms.get(0).platformType == 2){
+            platforms.get(0).getRectangle().bottom = platforms.get(0).getRectangle().top + platformHeight*2;
         }
 
 
     }
 
-    private void movPlatPosContr() {
+    private void GenerateMovingPlatformPostition() {
 
         platforms.get(0).howFar = rand.nextInt(400 - 7);
-        int xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH - platformWidth));
+        platforms.get(0).direction = 1;
 
-        while (platforms.get(0).getRectangle().left > (Constans.SCREEN_WIDTH - 400 - platformWidth)) {
-            xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH - platformWidth));
-            platforms.get(0).getRectangle().left = xStart;
-            platforms.get(0).getRectangle().right = xStart + platformWidth;
-        }
+        xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH - 800 - platformWidth)) + 400;
 
+
+        platforms.get(0).getRectangle().left = xStart;
+        platforms.get(0).getRectangle().right = xStart + platformWidth;
 
     }
 
@@ -195,16 +211,16 @@ public class PlatformsManager {
 
 
 
-     /*   for (int i=0; i<platforms.size(); i++)
+      /* for (int i=0; i<platforms.size(); i++)
         {
             platforms.get(i).draw(canvas);
-        }*/
-      /*  canvas.drawText(String.valueOf(platforms.size()), 500,500, paint);
-
-        for(int i=0; i<platforms.size(); i++){
-            canvas.drawText(String.valueOf(platforms.get(i).platformType), platforms.get(i).getRectangle().right +10, platforms.get(i).getRectangle().top +10, paint );
-        }*/
-
+        }
+        canvas.drawText(String.valueOf(platforms.size()), 500,500, paint);
+*/
+      /*  for(int i=0; i<platforms.size(); i++){
+            canvas.drawText(String.valueOf(platforms.get(i).getRectangle().left), platforms.get(i).getRectangle().right +10, platforms.get(i).getRectangle().top +10, paint );
+        }
+*/
 
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -26,5 +27,10 @@ public class MainActivity extends Activity {
         Constans.SCREEN_WIDTH = dm.widthPixels;
 
         setContentView(new GamePanel(this));
+    }
+
+    @Override
+    public void onBackPressed() {
+        GamePanel.OnBackPressed();
     }
 }

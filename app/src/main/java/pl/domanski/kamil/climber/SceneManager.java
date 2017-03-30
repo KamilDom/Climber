@@ -13,19 +13,24 @@ public class SceneManager {
 
     public static final int MENUSTATE = 0;
     public static final int GAMESTATE = 1;
-    private int ACTIVE_SCENE = 1;
+    public static final int ABOUSTATE = 2;
+    public boolean PAUSESTATE = false;
+
+    private int ACTIVE_SCENE = MENUSTATE;
 
     private ArrayList<Scene> scenes = new ArrayList<>();
 
 
     public SceneManager() {
-        ACTIVE_SCENE = MENUSTATE;
+
         scenes.add(new MenuScene(this));
         scenes.add(new GameplayScene(this));
+        scenes.add(new AboutScene(this));
 
     }
 
     public void setScene(int scene) {
+
         ACTIVE_SCENE = scene;
     }
 
@@ -35,12 +40,22 @@ public class SceneManager {
     }
 
     public void update() {
-        // ACTIVE_SCENE = scenes.get(ACTIVE_SCENE).changeScene(this);
+
         scenes.get(ACTIVE_SCENE).update();
     }
 
     public void draw(Canvas canvas) {
 
         scenes.get(ACTIVE_SCENE).draw(canvas);
+    }
+
+    public void OnBackPressed() {
+        if(ACTIVE_SCENE==ABOUSTATE){
+            ACTIVE_SCENE = MENUSTATE;
+        }
+
+        else if(ACTIVE_SCENE==GAMESTATE){
+            PAUSESTATE = !PAUSESTATE;
+        }
     }
 }
