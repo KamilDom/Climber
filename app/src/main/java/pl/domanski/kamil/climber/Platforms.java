@@ -27,7 +27,7 @@ public class Platforms implements GameObject {
     Bitmap platform2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
             R.drawable.grass);
     Bitmap platform3 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.plat);
+            R.drawable.plat2);
 
 
     public Rect getRectangle() {
@@ -45,7 +45,7 @@ public class Platforms implements GameObject {
     public Platforms(int platformHeight, int platformWidth, int startX, int startY, int platType) {
 
         if(platType == 2) {
-            rectangle = new Rect(startX, startY, startX + platformWidth, startY + platformHeight*2);
+            rectangle = new Rect(startX, startY, startX + platformWidth, startY + platformHeight);
         }
              else
         rectangle = new Rect(startX, startY, startX + platformWidth, startY + platformHeight);

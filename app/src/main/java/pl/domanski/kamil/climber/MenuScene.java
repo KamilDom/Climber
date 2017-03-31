@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 
+import pl.domanski.kamil.climber.Scenes.Scene;
+
 // Klasa odpowiedzialna za menu
 
 class MenuScene implements Scene {

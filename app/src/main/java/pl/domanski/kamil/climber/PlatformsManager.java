@@ -160,7 +160,7 @@ public class PlatformsManager {
         }
 
         else if(platforms.get(0).platformType == 2){
-            platforms.get(0).getRectangle().bottom = platforms.get(0).getRectangle().top + platformHeight*2;
+            platforms.get(0).getRectangle().bottom = platforms.get(0).getRectangle().top + platformHeight;
         }
 
 

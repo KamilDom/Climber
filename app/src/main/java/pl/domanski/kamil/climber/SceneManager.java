@@ -5,6 +5,10 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
+import pl.domanski.kamil.climber.Scenes.AboutScene;
+import pl.domanski.kamil.climber.Scenes.GameplayScene;
+import pl.domanski.kamil.climber.Scenes.Scene;
+
 /**
  * Created by Kamil on 19.03.2017.
  */
