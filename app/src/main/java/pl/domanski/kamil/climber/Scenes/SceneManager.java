@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import pl.domanski.kamil.climber.Scenes.AboutScene;
 import pl.domanski.kamil.climber.Scenes.GameplayScene;
+import pl.domanski.kamil.climber.Scenes.MenuScene;
 import pl.domanski.kamil.climber.Scenes.Scene;
 
 /**

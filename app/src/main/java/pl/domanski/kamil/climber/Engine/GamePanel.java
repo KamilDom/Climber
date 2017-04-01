@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import pl.domanski.kamil.climber.Scenes.SceneManager;
+
 /**
  * Created by Kamil on 19.03.2017.
  */
