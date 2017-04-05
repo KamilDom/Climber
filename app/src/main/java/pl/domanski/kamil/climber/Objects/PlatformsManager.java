@@ -1,6 +1,5 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Engine;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,12 +8,15 @@ import android.graphics.Paint;
 import java.util.ArrayList;
 import java.util.Random;
 
+import pl.domanski.kamil.climber.Engine.Constans;
+import pl.domanski.kamil.climber.Objects.Platforms;
+import pl.domanski.kamil.climber.Objects.Player;
+
 // Zarządzanie platformami - generacja
 
 public class PlatformsManager {
 
     private ArrayList<Platforms> platforms;
-    private ArrayList<Integer> pl;
     private int platformWidth = Constans.SCREEN_WIDTH / 6;
     private int platformHeight = Constans.SCREEN_HEIGHT / 30;
 
@@ -45,6 +47,7 @@ public class PlatformsManager {
     }
 
     public int getPlatformType(int platIndex) {
+
         return platforms.get(platIndex).platformType;
     }
 
@@ -181,8 +184,8 @@ public class PlatformsManager {
 
     public void incrementY(int inY) {
 
-        for (Platforms ob : platforms) {
-            ob.incrementY(inY);
+        for (Platforms pl : platforms) {
+            pl.incrementY(inY);
         }
     }
 
@@ -203,24 +206,14 @@ public class PlatformsManager {
         paint.setTextSize(50);
         paint.setColor(Color.WHITE);
 
-        for (Platforms ob : platforms) {
+        for (Platforms pl : platforms) {
 
-            ob.draw(canvas);
+            pl.draw(canvas);
         }
 
 
 
 
-      /* for (int i=0; i<platforms.size(); i++)
-        {
-            platforms.get(i).draw(canvas);
-        }
-        canvas.drawText(String.valueOf(platforms.size()), 500,500, paint);
-*/
-      /*  for(int i=0; i<platforms.size(); i++){
-            canvas.drawText(String.valueOf(platforms.get(i).getRectangle().left), platforms.get(i).getRectangle().right +10, platforms.get(i).getRectangle().top +10, paint );
-        }
-*/
 
     }
 }

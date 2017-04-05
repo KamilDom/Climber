@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import pl.domanski.kamil.climber.Engine.Constans;
+
 // Klasa w której zdefiniowane są parametry platform. Jeden obiekt tej klasy - jedna platforma
 
 public class Platforms implements GameObject {
