@@ -1,14 +1,16 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Engine;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import pl.domanski.kamil.climber.Scenes.SceneManager;
+
 
 /**
  * Created by Kamil on 19.03.2017.
@@ -27,7 +29,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         thread = new MainThread(getHolder(), this);
         manager = new SceneManager();
-
+       // getHolder().setFormat(PixelFormat.RGBA_8888);
         setFocusable(true);
     }
 
@@ -71,6 +73,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     public void update() {
+
         manager.update();
     }
 
@@ -87,6 +90,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     public static void OnBackPressed() {
         manager.OnBackPressed();
     }
+
 
 
 }

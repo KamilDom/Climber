@@ -1,4 +1,4 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Animations;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

@@ -1,7 +1,9 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Engine;
 
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
+
+import pl.domanski.kamil.climber.Engine.GamePanel;
 
 // Klasa odpowiedzialna za główny wątek gry - zegar
 

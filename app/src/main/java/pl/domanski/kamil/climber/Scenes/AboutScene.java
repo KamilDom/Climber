@@ -6,9 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 
-import pl.domanski.kamil.climber.Constans;
-import pl.domanski.kamil.climber.SceneManager;
-import pl.domanski.kamil.climber.Scenes.Scene;
+import pl.domanski.kamil.climber.Engine.Constans;
 
 /**
  * Created by Kamil on 30.03.2017.

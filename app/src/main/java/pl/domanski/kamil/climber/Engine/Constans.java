@@ -1,4 +1,4 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Engine;
 
 import android.content.Context;
 
@@ -11,4 +11,6 @@ public class Constans {
     public static Context CURRENT_CONTEXT;
 
     public static long INIT_TIME;
+
+
 }

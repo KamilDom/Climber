@@ -1,16 +1,13 @@
-package pl.domanski.kamil.climber.Engine;
+package pl.domanski.kamil.climber.Objects;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-
 import java.util.ArrayList;
 import java.util.Random;
 
 import pl.domanski.kamil.climber.Engine.Constans;
-import pl.domanski.kamil.climber.Objects.Platforms;
-import pl.domanski.kamil.climber.Objects.Player;
 
 // Zarządzanie platformami - generacja
 
@@ -75,10 +72,6 @@ public class PlatformsManager {
         return false;
     }
 
-    public int getPlatformColideBottom() {
-        if (indexColide == -1) return -100;
-        return platforms.get(indexColide).getRectangle().bottom;
-    }
 
     public int getPlatformColideTop() {
         if (indexColide == -1) return -100;

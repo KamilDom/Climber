@@ -1,4 +1,4 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Objects;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,24 +8,23 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import pl.domanski.kamil.climber.Engine.Constans;
+import pl.domanski.kamil.climber.R;
+import pl.domanski.kamil.climber.Scenes.SceneManager;
 
 // Klasa w której zdefiniowane są parametry platform. Jeden obiekt tej klasy - jedna platforma
 
-public class Platforms implements GameObject {
+public class Platforms implements pl.domanski.kamil.climber.GameObject {
 
     public Rect rectangle;
 
     public int platformType;
-
-
+    private Paint paint;
     public int direction;
-
     public int howFar = 400;
 
 
     BitmapFactory bf = new BitmapFactory();
-    Bitmap platform1 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.platform1);
+
     Bitmap platform2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
             R.drawable.grass);
     Bitmap platform3 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
@@ -46,10 +45,8 @@ public class Platforms implements GameObject {
 
     public Platforms(int platformHeight, int platformWidth, int startX, int startY, int platType) {
 
-        if(platType == 2) {
-            rectangle = new Rect(startX, startY, startX + platformWidth, startY + platformHeight);
-        }
-             else
+        paint = new Paint();
+
         rectangle = new Rect(startX, startY, startX + platformWidth, startY + platformHeight);
         platformType = platType;
 
@@ -67,28 +64,22 @@ public class Platforms implements GameObject {
             return true;
 
         else return false;
-        //Rect.intersects(rectangle, player.getRectangle());
+
     }
 
     @Override
     public void draw(Canvas canvas) {
 
-        Paint paint = new Paint();
+
         paint.setColor(Color.RED);
         if (platformType == 0) {
-            paint.setColor(Color.BLUE);
-            //  canvas.drawRect(rectangle, paint);
             canvas.drawBitmap(platform2, null, rectangle, paint);
         } else if (platformType == 2) {
-            paint.setColor(Color.BLACK);
             canvas.drawBitmap(platform3, null, rectangle, paint);
-            //  canvas.drawRect(rectangle, paint);
-
         } else {
-            paint.setColor(Color.GREEN);
             canvas.drawBitmap(platform2, null, rectangle, paint);
-            //canvas.drawRect(rectangle, paint);
-            movingPlatform();
+            if (!SceneManager.PAUSE && !SceneManager.GAMEOVER)
+                movingPlatform();
         }
     }
 

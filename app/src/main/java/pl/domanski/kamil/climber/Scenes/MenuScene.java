@@ -1,34 +1,48 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Scenes;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
-import pl.domanski.kamil.climber.Scenes.Scene;
+
+import java.util.ArrayList;
+
+import pl.domanski.kamil.climber.Engine.Constans;
+import pl.domanski.kamil.climber.Objects.Button;
+import pl.domanski.kamil.climber.R;
+
 
 // Klasa odpowiedzialna za menu
 
 class MenuScene implements Scene {
-
+    private BitmapFactory bf = new BitmapFactory();
+    Bitmap sky = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+            R.drawable.sky1);
     private Paint paint;
     private Rect r;
-    private Rect NewGameRect;
-    private Rect Exit;
-    private Rect About;
+    private int textButtonColor = Color.rgb(255, 255, 255);
+    private int backgroundButtonColor = Color.rgb(0, 120, 0);
 
-    protected SceneManager sceneManager;
+    private SceneManager sceneManager;
+    private ArrayList<Button> buttons;
 
-    public int ActiveScene=0;
 
     public MenuScene(SceneManager sceneManager) {
+        buttons = new ArrayList<Button>();
+        buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 5 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "New game", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
+        buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 8 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "Settings", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
+        buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 11 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "About", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
+        buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 14 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "Exit", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
         this.sceneManager = sceneManager;
         paint = new Paint();
         r = new Rect();
-        NewGameRect = new Rect();
-        Exit = new Rect();
-        About = new Rect();
+
     }
 
     @Override
@@ -39,37 +53,20 @@ class MenuScene implements Scene {
     @Override
     public void draw(Canvas canvas) {
 
-
-
-        canvas.drawColor(Color.GRAY);
+        //canvas.drawBitmap(sky,0,0,paint);
+        //canvas.drawColor(Color.GRAY);
 
         paint.setColor(Color.DKGRAY);
-        paint.setTextSize(Constans.SCREEN_WIDTH/5);
-        drawCenterText(canvas, paint, "Climber", Constans.SCREEN_HEIGHT/5);
-
+        paint.setTextSize(Constans.SCREEN_WIDTH / 5);
+        drawCenterText(canvas, paint, "Climber", Constans.SCREEN_HEIGHT / 5);
 
 
         paint.setColor(Color.DKGRAY);
 
-        NewGameRect = getTextRect(canvas, "New Game", Constans.SCREEN_HEIGHT/3, Constans.SCREEN_WIDTH/8);
-        canvas.drawRect(getTextRect(canvas, "New Game", Constans.SCREEN_HEIGHT/3, Constans.SCREEN_WIDTH/8), paint);
 
-        About = getTextRect(canvas, "About", Constans.SCREEN_HEIGHT/2, Constans.SCREEN_WIDTH/8);
-        canvas.drawRect(getTextRect(canvas, "About", Constans.SCREEN_HEIGHT/2, Constans.SCREEN_WIDTH/8), paint);
-
-        Exit = getTextRect(canvas, "Exit", Constans.SCREEN_HEIGHT*2/3, Constans.SCREEN_WIDTH/8);
-        canvas.drawRect(getTextRect(canvas, "Exit", Constans.SCREEN_HEIGHT*2/3, Constans.SCREEN_WIDTH/8), paint);
-
-        paint.setColor(Color.WHITE);
-
-        drawCenterText(canvas, paint, "New Game", Constans.SCREEN_HEIGHT/3);
-        drawCenterText(canvas, paint, "About", Constans.SCREEN_HEIGHT/2);
-        drawCenterText(canvas, paint, "Exit", Constans.SCREEN_HEIGHT*2/3);
-
-
-
-
-
+        for (Button bu : buttons) {
+            bu.draw(canvas);
+        }
     }
 
     @Override
@@ -80,50 +77,28 @@ class MenuScene implements Scene {
 
     @Override
     public void recieveTouch(MotionEvent event) {
-        if(NewGameRect.contains((int)event.getX(), (int)event.getY()) ){
-            sceneManager.setScene(1);
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (buttons.get(0).onClick(event)) {
+                sceneManager.setScene(1);
+            } else if (buttons.get(1).onClick(event)) {
+                sceneManager.setScene(2);
+            } else if (buttons.get(2).onClick(event)) {
+                sceneManager.setScene(3);
+            } else if (buttons.get(3).onClick(event)) {
+                System.exit(0);
+            }
         }
 
-        else if(About.contains((int)event.getX(), (int)event.getY()) ){
-            sceneManager.setScene(2);
-        }
-
-        else if(Exit.contains((int)event.getX(), (int)event.getY()) ){
-
-            System.exit(0);
-        }
-        //else ActiveScene =0;
 
     }
 
     public void drawCenterText(Canvas canvas, Paint paint, String text, int y) {
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.getClipBounds(r);
-
-        int cHeight = r.height();
         int cWidth = r.width();
         paint.getTextBounds(text, 0, text.length(), r);
         float x = cWidth / 2f - r.width() / 2f - r.left;
-      //  float y = cHeight / 2f + r.height() / 2f - r.bottom;
         canvas.drawText(text, x, y, paint);
-
-
-
-
-
-    }
-
-
-    private Rect getTextRect(Canvas canvas, String text, int y, int textSize){
-        paint.setTextSize(textSize);
-        paint.setTextAlign(Paint.Align.LEFT);
-        canvas.getClipBounds(r);
-        int cWidth = r.width();
-        paint.getTextBounds(text, 0, text.length(), r);
-        float x = cWidth / 2f - r.width() / 2f - r.left;
-        Rect a = new Rect ( (int) x, y-r.height()-r.height()/4, (int) (Constans.SCREEN_WIDTH-x) ,y+r.height()/4);
-
-        return a;
     }
 
 

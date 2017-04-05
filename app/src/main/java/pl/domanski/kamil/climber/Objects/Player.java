@@ -1,13 +1,18 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Objects;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+
+import pl.domanski.kamil.climber.Animations.Animation;
+import pl.domanski.kamil.climber.Animations.AnimationManager;
+import pl.domanski.kamil.climber.Engine.Constans;
+import pl.domanski.kamil.climber.GameObject;
+import pl.domanski.kamil.climber.R;
+
 
 /**
  * Created by Kamil on 19.03.2017.
@@ -49,6 +54,8 @@ public class Player implements GameObject {
                 R.drawable.alienblue_walk1y);
         Bitmap walk2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
                 R.drawable.alienblue_walk2y);
+
+
 
 
         idle = new Animation(new Bitmap[]{idleImg}, 2);

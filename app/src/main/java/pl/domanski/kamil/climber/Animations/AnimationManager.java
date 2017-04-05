@@ -1,7 +1,9 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Animations;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+
+import pl.domanski.kamil.climber.Animations.Animation;
 
 /**
  * Created by Kamil on 19.03.2017.

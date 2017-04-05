@@ -10,13 +10,11 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import pl.domanski.kamil.climber.Constans;
-import pl.domanski.kamil.climber.OrientationData;
-import pl.domanski.kamil.climber.PlatformsManager;
-import pl.domanski.kamil.climber.Player;
+import pl.domanski.kamil.climber.Engine.Constans;
+import pl.domanski.kamil.climber.Engine.OrientationData;
+import pl.domanski.kamil.climber.Objects.PlatformsManager;
+import pl.domanski.kamil.climber.Objects.Player;
 import pl.domanski.kamil.climber.R;
-import pl.domanski.kamil.climber.SceneManager;
-import pl.domanski.kamil.climber.Scenes.Scene;
 
 //Główna klasa gameplayu
 
@@ -24,6 +22,9 @@ public class GameplayScene implements Scene {
 
     private Rect r = new Rect();
     private Rect background;
+    private Rect settings;
+    private Rect resume;
+    private Rect menu;
 
     protected SceneManager sceneManager;
 
@@ -31,6 +32,10 @@ public class GameplayScene implements Scene {
     Bitmap sky = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
             R.drawable.sky2);
 
+
+
+
+    Bitmap scaled = Bitmap.createScaledBitmap(sky, Constans.SCREEN_WIDTH, Constans.SCREEN_HEIGHT, true);
 
     Paint paint;
 
@@ -41,8 +46,6 @@ public class GameplayScene implements Scene {
     private PlatformsManager platformsManager;
 
 
-    private boolean gameOver = false;
-    private boolean pause = false;
     private long gameOverTime;
 
     private OrientationData orientationData;
@@ -51,8 +54,12 @@ public class GameplayScene implements Scene {
 
     public GameplayScene(SceneManager sceneManager) {
 
+        sceneManager.PAUSE = false;
         this.sceneManager = sceneManager;
         paint = new Paint();
+        settings = new Rect(Constans.SCREEN_WIDTH/2, Constans.SCREEN_HEIGHT*2/7, Constans.SCREEN_WIDTH*2/3, Constans.SCREEN_HEIGHT*3/7);
+        menu = new Rect(Constans.SCREEN_WIDTH/2, Constans.SCREEN_HEIGHT*4/7, Constans.SCREEN_WIDTH*2/3, Constans.SCREEN_HEIGHT*5/7);
+        resume = new Rect(Constans.SCREEN_WIDTH/2, Constans.SCREEN_HEIGHT*6/7, Constans.SCREEN_WIDTH*2/3, Constans.SCREEN_HEIGHT*7/8);
         player = new Player(new Rect(100, 100, 250, 250), Color.rgb(200, 50, 50), 40);
         playerPoint = new Point(Constans.SCREEN_WIDTH / 2, Constans.SCREEN_HEIGHT * 4 / 5);
         background = new Rect(0, 0, Constans.SCREEN_WIDTH, Constans.SCREEN_HEIGHT);
@@ -64,7 +71,7 @@ public class GameplayScene implements Scene {
         orientationData = new OrientationData();
         orientationData.register();
         frameTime = System.currentTimeMillis();
-        orientationData.newGame();
+
 
     }
 
@@ -73,7 +80,7 @@ public class GameplayScene implements Scene {
         playerPoint.x = Constans.SCREEN_WIDTH / 2;
         playerPoint.y = 3 * Constans.SCREEN_HEIGHT / 4;
         player.update(playerPoint);
-        orientationData.newGame();
+
 
 
     }
@@ -81,7 +88,7 @@ public class GameplayScene implements Scene {
     @Override
     public void terminate() {
 
-        gameOver = true;
+        SceneManager.GAMEOVER = true;
 
     }
 
@@ -91,24 +98,37 @@ public class GameplayScene implements Scene {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                if (gameOver && System.currentTimeMillis() - gameOverTime >= 500) {
+                if (SceneManager.GAMEOVER && System.currentTimeMillis() - gameOverTime >= 500) {
                     sceneManager.setScene(0);
                     reset();
-                    gameOver = false;
-                    orientationData.newGame();
+                    SceneManager.GAMEOVER = false;
+                }
 
+                else if (settings.contains((int) event.getX(), (int) event.getY()) && SceneManager.PAUSE ) {
+                    sceneManager.setScene(2);
+                }
+
+                else if (menu.contains((int) event.getX(), (int) event.getY()) && SceneManager.PAUSE ) {
+                    sceneManager.setScene(0);
+                }
+
+                else if (resume.contains((int) event.getX(), (int) event.getY()) && SceneManager.PAUSE ) {
+                SceneManager.PAUSE = false;
                 }
 
 
-                break;
+
+                    break;
 
         }
     }
 
+
+
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawColor(Color.rgb(91, 173, 235));
-
+       canvas.drawColor(Color.rgb(91, 173, 235));
+       // canvas.drawBitmap(scaled,0,0,paint);
 
 
         platformsManager.draw(canvas);
@@ -117,50 +137,50 @@ public class GameplayScene implements Scene {
         paint.setTextSize(50);
         canvas.drawText("Score: " + String.valueOf(platformsManager.score), 50, 50, paint);
 
-        if (gameOver) {
-
+        if (SceneManager.GAMEOVER) {
             paint.setTextSize(100);
             paint.setColor(Color.MAGENTA);
-            drawCenterText(canvas, paint, "Game Over");
+            getCenterCorinate(canvas, "Game Over");
+
+            canvas.drawText("Game Over",(getCenterCorinate(canvas, "Game Over")[0]),(getCenterCorinate(canvas, "Game Over")[1]) , paint);
+
 
         }
 
-        if (sceneManager.PAUSESTATE && !gameOver){
-            paint.setColor(Color.argb(200, 0, 198 , 50));
-            canvas.drawRect(Constans.SCREEN_WIDTH/9, Constans.SCREEN_HEIGHT/9, Constans.SCREEN_WIDTH*8/9, Constans.SCREEN_HEIGHT*8/9, paint);
-            paint.setTextSize(100);
-            paint.setColor(Color.MAGENTA);
-            drawCenterText(canvas, paint, "Pause");
+        if (sceneManager.PAUSE && !SceneManager.GAMEOVER){
+            drawPauseMenu(canvas);
+
         }
 
+
+    }
+
+    private void drawPauseMenu(Canvas canvas) {
+
+        paint.setColor(Color.rgb( 0, 100 , 200));
+        canvas.drawRect(Constans.SCREEN_WIDTH/9, Constans.SCREEN_HEIGHT/9, Constans.SCREEN_WIDTH*8/9, Constans.SCREEN_HEIGHT*8/9, paint);
+        paint.setTextSize(100);
+        paint.setColor(Color.MAGENTA);
+        canvas.drawText("Pause",(getCenterCorinate(canvas, "Pause")[0]), (float) (Constans.SCREEN_HEIGHT*1.8/9),paint);
+        canvas.drawRect(settings, paint);
+        canvas.drawRect(menu, paint);
+        canvas.drawRect(resume,paint);
 
     }
 
     @Override
     public void update() {
 
-        if(pause!=sceneManager.PAUSESTATE && pause==false){
-            pause=sceneManager.PAUSESTATE;
-            playerPoint2.x=playerPoint.x;
-            playerPoint2.y=playerPoint.y;
 
-        }
-
-        else if(pause!=sceneManager.PAUSESTATE && pause==true){
-            pause=sceneManager.PAUSESTATE;
-            playerPoint.x=playerPoint2.x;
-            playerPoint.y=playerPoint2.y;
-        }
-        if (!gameOver && !sceneManager.PAUSESTATE) {
+        if (!SceneManager.GAMEOVER && !sceneManager.PAUSE) {
 
             if (frameTime < Constans.INIT_TIME)
                 frameTime = Constans.INIT_TIME;
             int elapsedTime = (int) (System.currentTimeMillis() - frameTime);
             frameTime = System.currentTimeMillis();
 
-            if (orientationData.getOrientation() != null && orientationData.getStartOrientation() != null) {
-                float roll = orientationData.getOrientation()[2] - orientationData.getStartOrientation()[2];
-                float xSpeed = 2 * roll * Constans.SCREEN_WIDTH / 550f;
+            float xSpeed;
+            playerPoint.x -= Math.abs(orientationData.getOrientation() * elapsedTime)*sceneManager.getSensivity()/9 > 4 ? orientationData.getOrientation()*sceneManager.getSensivity()/9 * elapsedTime : 0;
 
 
                 if (platformsManager.playerCollide(player) && player.jumpState == 1) {
@@ -183,7 +203,7 @@ public class GameplayScene implements Scene {
                     }
                 }
 
-                playerPoint.x += Math.abs(xSpeed * elapsedTime) > 4 ? xSpeed * elapsedTime : 0;
+
 
 
                 if (playerPoint.x < -player.getRectangle().width() / 4)
@@ -196,20 +216,20 @@ public class GameplayScene implements Scene {
 
                 if (playerPoint.y < 0) playerPoint.y = 0;
 
-            }
+
 
 
             player.update(playerPoint);
             platformsManager.update();
             if (playerPoint.y > Constans.SCREEN_HEIGHT) {
-                gameOver = true;
+                SceneManager.GAMEOVER = true;
                 gameOverTime = System.currentTimeMillis();
 
             }
         }
     }
 
-    private void drawCenterText(Canvas canvas, Paint paint, String text) {
+    private float[] getCenterCorinate(Canvas canvas, String text) {
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.getClipBounds(r);
         int cHeight = r.height();
@@ -217,7 +237,9 @@ public class GameplayScene implements Scene {
         paint.getTextBounds(text, 0, text.length(), r);
         float x = cWidth / 2f - r.width() / 2f - r.left;
         float y = cHeight / 2f + r.height() / 2f - r.bottom;
-        canvas.drawText(text, x, y, paint);
+
+        float[] cordinate ={x,y};
+        return cordinate;
 
     }
 
