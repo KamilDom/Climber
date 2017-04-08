@@ -28,12 +28,12 @@ public class SceneManager {
     private int lastScene;
 
     private ArrayList<Scene> scenes = new ArrayList<>();
-
+    private GameplayScene gameplayScene = new GameplayScene(this);
 
     public SceneManager() {
 
         scenes.add(new MenuScene(this));
-        scenes.add(new GameplayScene(this));
+        scenes.add(gameplayScene);
         scenes.add(new SettingsScene(this));
         scenes.add(new AboutScene(this));
 
@@ -71,16 +71,19 @@ public class SceneManager {
     }
 
     public int getLastScene(){
+
         return lastScene;
     }
 
     public int getSensivity(){
+
         return SettingsScene.getSensivity();
     }
 
-    public boolean confirmDialog(){
-
-
-     return true;
+    public void resetGame(){
+        gameplayScene.reset();
     }
+
+
+
 }

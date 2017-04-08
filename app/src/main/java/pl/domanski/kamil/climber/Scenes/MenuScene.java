@@ -15,15 +15,13 @@ import java.util.ArrayList;
 
 import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.Objects.Button;
-import pl.domanski.kamil.climber.R;
+
 
 
 // Klasa odpowiedzialna za menu
 
 class MenuScene implements Scene {
-    private BitmapFactory bf = new BitmapFactory();
-    Bitmap sky = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.sky1);
+
     private Paint paint;
     private Rect r;
     private int textButtonColor = Color.rgb(255, 255, 255);
@@ -31,6 +29,9 @@ class MenuScene implements Scene {
 
     private SceneManager sceneManager;
     private ArrayList<Button> buttons;
+    private ConfirmScene confirmScene;
+
+    private boolean showConfirmScene = false;
 
 
     public MenuScene(SceneManager sceneManager) {
@@ -39,9 +40,12 @@ class MenuScene implements Scene {
         buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 8 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "Settings", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
         buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 11 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "About", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
         buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 14 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "Exit", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
+
         this.sceneManager = sceneManager;
         paint = new Paint();
         r = new Rect();
+
+        confirmScene = new ConfirmScene(sceneManager);
 
     }
 
@@ -53,9 +57,7 @@ class MenuScene implements Scene {
     @Override
     public void draw(Canvas canvas) {
 
-        //canvas.drawBitmap(sky,0,0,paint);
-        //canvas.drawColor(Color.GRAY);
-
+        canvas.drawColor(Color.rgb(0, 100 , 200));
         paint.setColor(Color.DKGRAY);
         paint.setTextSize(Constans.SCREEN_WIDTH / 5);
         drawCenterText(canvas, paint, "Climber", Constans.SCREEN_HEIGHT / 5);
@@ -66,6 +68,10 @@ class MenuScene implements Scene {
 
         for (Button bu : buttons) {
             bu.draw(canvas);
+        }
+
+        if(showConfirmScene){
+            confirmScene.draw(canvas);
         }
     }
 
@@ -78,15 +84,28 @@ class MenuScene implements Scene {
     @Override
     public void recieveTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (buttons.get(0).onClick(event)) {
-                sceneManager.setScene(1);
-            } else if (buttons.get(1).onClick(event)) {
-                sceneManager.setScene(2);
-            } else if (buttons.get(2).onClick(event)) {
-                sceneManager.setScene(3);
-            } else if (buttons.get(3).onClick(event)) {
+            if(!showConfirmScene){
+                if (buttons.get(0).onClick(event)) {
+                    sceneManager.resetGame();
+                    sceneManager.setScene(1);
+                } else if (buttons.get(1).onClick(event)) {
+                    sceneManager.setScene(2);
+                } else if (buttons.get(2).onClick(event)) {
+                    sceneManager.setScene(3);
+                } else if (buttons.get(3).onClick(event)) {
+                    showConfirmScene=true;
+                }
+            }
+            else if(confirmScene.buttons.get(0).onClick(event) ){
+                showConfirmScene=false;
+            }
+
+            else if(confirmScene.buttons.get(1).onClick(event) ){
                 System.exit(0);
             }
+
+
+
         }
 
 

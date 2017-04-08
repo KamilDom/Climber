@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 
 import pl.domanski.kamil.climber.Engine.Constans;
+import pl.domanski.kamil.climber.Engine.OrientationData;
 
 /**
  * Created by Kamil on 30.03.2017.
@@ -19,12 +20,18 @@ public class AboutScene implements Scene {
     private Paint paint;
     private Rect back;
 
+
+
+
+
     public AboutScene(SceneManager sceneManager) {
         this.sceneManager = sceneManager;
         r = new Rect();
         paint = new Paint();
         back = new Rect(Constans.SCREEN_WIDTH*3/5, Constans.SCREEN_HEIGHT/4 + Constans.SCREEN_HEIGHT*3/10,
                     Constans.SCREEN_WIDTH*9/10, Constans.SCREEN_HEIGHT/4 + Constans.SCREEN_HEIGHT*4/10  );
+
+
     }
 
     @Override

@@ -25,7 +25,10 @@ public class OrientationData implements SensorEventListener {
         return accelOutput[0];
     }
 
+    public float getOrientation2(){
 
+        return accelOutput[1];
+    }
 
     public OrientationData(){
         manager = (SensorManager) Constans.CURRENT_CONTEXT.getSystemService(Context.SENSOR_SERVICE);

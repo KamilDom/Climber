@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -25,10 +26,13 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
 
     BitmapFactory bf = new BitmapFactory();
 
-    Bitmap platform2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+    Bitmap platform1 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
             R.drawable.grass);
-    Bitmap platform3 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+    Bitmap platform2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
             R.drawable.plat2);
+
+    Bitmap resizedPlatform1;
+    Bitmap resizedPlatform2;
 
 
     public Rect getRectangle() {
@@ -46,7 +50,8 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
     public Platforms(int platformHeight, int platformWidth, int startX, int startY, int platType) {
 
         paint = new Paint();
-
+        resizedPlatform1 = getResizedBitmap(platform1 ,platformWidth,platformHeight);
+        resizedPlatform2 = getResizedBitmap(platform2 ,platformWidth,platformHeight);
         rectangle = new Rect(startX, startY, startX + platformWidth, startY + platformHeight);
         platformType = platType;
 
@@ -73,11 +78,14 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
 
         paint.setColor(Color.RED);
         if (platformType == 0) {
-            canvas.drawBitmap(platform2, null, rectangle, paint);
+          //  canvas.drawBitmap(platform2, null, rectangle, paint);
+            canvas.drawBitmap(resizedPlatform1,rectangle.left, rectangle.top ,paint);
         } else if (platformType == 2) {
-            canvas.drawBitmap(platform3, null, rectangle, paint);
+            //canvas.drawBitmap(platform3, null, rectangle, paint);
+            canvas.drawBitmap(resizedPlatform2,rectangle.left, rectangle.top ,paint);
         } else {
-            canvas.drawBitmap(platform2, null, rectangle, paint);
+          //  canvas.drawBitmap(platform2, null, rectangle, paint);
+            canvas.drawBitmap(resizedPlatform1,rectangle.left, rectangle.top ,paint);
             if (!SceneManager.PAUSE && !SceneManager.GAMEOVER)
                 movingPlatform();
         }
@@ -101,7 +109,21 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
 
 
     }
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
 
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
+    }
 
     @Override
     public void update() {

@@ -79,8 +79,14 @@ public class PlatformsManager {
     }
 
     private void generatePlatforms() {
+/*
+        Tu musze poprawic startową platforme                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111
+
 
         platforms.add(new Platforms(platformHeight, Constans.SCREEN_WIDTH, 0, Constans.SCREEN_HEIGHT - platformHeight, 0));
+        platforms.get(0).platformType = 0;*/
+
+        platforms.add(new Platforms(platformHeight, platformWidth, 0, Constans.SCREEN_HEIGHT - platformHeight, 0));
         platforms.get(0).platformType = 0;
         int currY = (int) (-Constans.SCREEN_HEIGHT * 3 / 4);
 

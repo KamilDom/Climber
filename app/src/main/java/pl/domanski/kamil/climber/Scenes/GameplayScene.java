@@ -22,26 +22,16 @@ public class GameplayScene implements Scene {
 
     private Rect r = new Rect();
     private Rect background;
-    private Rect settings;
-    private Rect resume;
-    private Rect menu;
-
-    protected SceneManager sceneManager;
-
-    BitmapFactory bf = new BitmapFactory();
-    Bitmap sky = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.sky2);
 
 
+    private SceneManager sceneManager;
+    private PauseScene pauseScene;
 
-
-    Bitmap scaled = Bitmap.createScaledBitmap(sky, Constans.SCREEN_WIDTH, Constans.SCREEN_HEIGHT, true);
-
-    Paint paint;
+     private Paint paint;
 
     private Player player;
     private Point playerPoint;
-    private Point playerPoint2;
+
 
     private PlatformsManager platformsManager;
 
@@ -52,20 +42,23 @@ public class GameplayScene implements Scene {
     private long frameTime;
 
 
+
+
     public GameplayScene(SceneManager sceneManager) {
+
+
+
 
         sceneManager.PAUSE = false;
         this.sceneManager = sceneManager;
         paint = new Paint();
-        settings = new Rect(Constans.SCREEN_WIDTH/2, Constans.SCREEN_HEIGHT*2/7, Constans.SCREEN_WIDTH*2/3, Constans.SCREEN_HEIGHT*3/7);
-        menu = new Rect(Constans.SCREEN_WIDTH/2, Constans.SCREEN_HEIGHT*4/7, Constans.SCREEN_WIDTH*2/3, Constans.SCREEN_HEIGHT*5/7);
-        resume = new Rect(Constans.SCREEN_WIDTH/2, Constans.SCREEN_HEIGHT*6/7, Constans.SCREEN_WIDTH*2/3, Constans.SCREEN_HEIGHT*7/8);
+        pauseScene = new PauseScene(sceneManager);
         player = new Player(new Rect(100, 100, 250, 250), Color.rgb(200, 50, 50), 40);
         playerPoint = new Point(Constans.SCREEN_WIDTH / 2, Constans.SCREEN_HEIGHT * 4 / 5);
         background = new Rect(0, 0, Constans.SCREEN_WIDTH, Constans.SCREEN_HEIGHT);
         player.update(playerPoint);
 
-        Log.d("new", "GampleyScene");
+
         platformsManager = new PlatformsManager((int) (Constans.SCREEN_WIDTH * 0.23), 80);
 
         orientationData = new OrientationData();
@@ -80,6 +73,9 @@ public class GameplayScene implements Scene {
         playerPoint.x = Constans.SCREEN_WIDTH / 2;
         playerPoint.y = 3 * Constans.SCREEN_HEIGHT / 4;
         player.update(playerPoint);
+        SceneManager.PAUSE=false;
+        pauseScene.showConfirmScene = false;
+        player.jump();
 
 
 
@@ -98,27 +94,20 @@ public class GameplayScene implements Scene {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
+
+
+
                 if (SceneManager.GAMEOVER && System.currentTimeMillis() - gameOverTime >= 500) {
                     sceneManager.setScene(0);
                     reset();
                     SceneManager.GAMEOVER = false;
                 }
 
-                else if (settings.contains((int) event.getX(), (int) event.getY()) && SceneManager.PAUSE ) {
-                    sceneManager.setScene(2);
-                }
-
-                else if (menu.contains((int) event.getX(), (int) event.getY()) && SceneManager.PAUSE ) {
-                    sceneManager.setScene(0);
-                }
-
-                else if (resume.contains((int) event.getX(), (int) event.getY()) && SceneManager.PAUSE ) {
-                SceneManager.PAUSE = false;
-                }
-
-
-
+                else if(SceneManager.PAUSE)
+                    pauseScene.recieveTouch(event);
                     break;
+
+
 
         }
     }
@@ -127,15 +116,15 @@ public class GameplayScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-       canvas.drawColor(Color.rgb(91, 173, 235));
-       // canvas.drawBitmap(scaled,0,0,paint);
 
+       canvas.drawColor(Color.rgb(91, 173, 235));
 
         platformsManager.draw(canvas);
         player.draw(canvas);
         paint.setColor(Color.YELLOW);
         paint.setTextSize(50);
         canvas.drawText("Score: " + String.valueOf(platformsManager.score), 50, 50, paint);
+
 
         if (SceneManager.GAMEOVER) {
             paint.setTextSize(100);
@@ -147,26 +136,20 @@ public class GameplayScene implements Scene {
 
         }
 
-        if (sceneManager.PAUSE && !SceneManager.GAMEOVER){
-            drawPauseMenu(canvas);
+
+
+
+        else if (sceneManager.PAUSE && !SceneManager.GAMEOVER){
+            pauseScene.draw(canvas);
 
         }
 
-
     }
 
-    private void drawPauseMenu(Canvas canvas) {
 
-        paint.setColor(Color.rgb( 0, 100 , 200));
-        canvas.drawRect(Constans.SCREEN_WIDTH/9, Constans.SCREEN_HEIGHT/9, Constans.SCREEN_WIDTH*8/9, Constans.SCREEN_HEIGHT*8/9, paint);
-        paint.setTextSize(100);
-        paint.setColor(Color.MAGENTA);
-        canvas.drawText("Pause",(getCenterCorinate(canvas, "Pause")[0]), (float) (Constans.SCREEN_HEIGHT*1.8/9),paint);
-        canvas.drawRect(settings, paint);
-        canvas.drawRect(menu, paint);
-        canvas.drawRect(resume,paint);
 
-    }
+
+
 
     @Override
     public void update() {

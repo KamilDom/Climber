@@ -3,6 +3,7 @@ package pl.domanski.kamil.climber.Objects;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.MotionEvent;
@@ -28,6 +29,15 @@ public class Button implements GameObject{
 
     Bitmap button = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
             R.drawable.menubutton);
+    Bitmap resizedBitmap;
+
+    Bitmap buttonEdge = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+            R.drawable.buttone_edge2);
+
+    Bitmap buttonMiddle = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+            R.drawable.buttone_middle);
+
+    private Bitmap[] buttonBitmaps;
 
 
     public Button(int startX, int startY, int buttonWidth, int buttonHeight, String buttonText, int textSize, int textColor, int buttonColor){
@@ -43,7 +53,24 @@ public class Button implements GameObject{
 
         paint = new Paint();
 
+        buttonBitmaps = buttonBitmaps(buttonEdge, buttonMiddle, buttonHeight);
 
+
+    }
+
+    public Bitmap[] buttonBitmaps(Bitmap edgeSource, Bitmap middleSource, int destinationHeight){
+        float xRatio =  edgeSource.getHeight()/destinationHeight;
+        Bitmap leftEdge = getResizedBitmap(edgeSource , (int) (edgeSource.getWidth()/xRatio),destinationHeight);
+
+        Bitmap middle = getResizedBitmap(middleSource,buttonWidth-2*leftEdge.getWidth(),buttonHeight);
+
+        Matrix m = new Matrix();
+        m.preScale(-1, 1);
+        Bitmap rightEdge = Bitmap.createBitmap(leftEdge, 0, 0, leftEdge.getWidth(), leftEdge.getHeight(), m, false);
+
+        Bitmap[] temp = {leftEdge,middle,rightEdge};
+
+        return  temp;
     }
 
     @Override
@@ -53,8 +80,11 @@ public class Button implements GameObject{
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setColor(buttonColor);
       //  canvas.drawRect(startX, startY , startX+buttonWidth , startY+buttonHeight, paint);
-        canvas.drawBitmap(button, null, new Rect(startX, startY , startX+buttonWidth , startY+buttonHeight), paint);
-       // canvas.drawBitmap(button, startX,startY, paint);
+        //canvas.drawBitmap(button, null, new Rect(startX, startY , startX+buttonWidth , startY+buttonHeight), paint);
+        canvas.drawBitmap(buttonBitmaps[0], startX,startY, paint);
+        canvas.drawBitmap(buttonBitmaps[1], startX+buttonBitmaps[0].getWidth(),startY, paint);
+        canvas.drawBitmap(buttonBitmaps[2], startX+buttonBitmaps[0].getWidth()+buttonBitmaps[1].getWidth(),startY, paint);
+
         paint.setColor(textColor);
         canvas.drawText(buttonText,startX+(buttonWidth-paint.measureText(buttonText))/2,startY+buttonHeight/2+textSize/4, paint);
     }
@@ -75,5 +105,19 @@ public class Button implements GameObject{
         else return false;
     }
 
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
 
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
+    }
 }
