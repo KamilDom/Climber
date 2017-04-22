@@ -31,21 +31,21 @@ class MenuScene implements Scene {
     private ArrayList<Button> buttons;
     private ConfirmScene confirmScene;
 
-    private boolean showConfirmScene = false;
+    public boolean showConfirmScene = false;
 
 
     public MenuScene(SceneManager sceneManager) {
         buttons = new ArrayList<Button>();
         buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 5 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "New game", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
-        buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 8 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "Settings", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
-        buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 11 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "About", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
+        buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 8 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "Highscore", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
+        buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 11 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "Settings", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
         buttons.add(new Button(Constans.SCREEN_WIDTH / 5, Constans.SCREEN_HEIGHT * 14 / 20, Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 10, "Exit", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
 
         this.sceneManager = sceneManager;
         paint = new Paint();
         r = new Rect();
 
-        confirmScene = new ConfirmScene(sceneManager);
+        confirmScene = new ConfirmScene("Are you sure ", "you want to exit?");
 
     }
 
@@ -58,7 +58,7 @@ class MenuScene implements Scene {
     public void draw(Canvas canvas) {
 
         canvas.drawColor(Color.rgb(0, 100 , 200));
-        paint.setColor(Color.DKGRAY);
+        paint.setColor(Color.WHITE);
         paint.setTextSize(Constans.SCREEN_WIDTH / 5);
         drawCenterText(canvas, paint, "Climber", Constans.SCREEN_HEIGHT / 5);
 

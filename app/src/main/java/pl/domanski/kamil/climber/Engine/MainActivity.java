@@ -8,8 +8,11 @@ import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
 
+import pl.domanski.kamil.climber.Scenes.SceneManager;
+
 public class MainActivity extends Activity {
 
+    private GamePanel gamePanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +29,9 @@ public class MainActivity extends Activity {
         Constans.SCREEN_HEIGHT = dm.heightPixels;
         Constans.SCREEN_WIDTH = dm.widthPixels;
 
+        gamePanel = new GamePanel(this);
 
-
-        setContentView(new GamePanel(this));
+        setContentView(gamePanel);
     }
 
     @Override
@@ -37,5 +40,9 @@ public class MainActivity extends Activity {
         GamePanel.OnBackPressed();
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        gamePanel.onPause();
+    }
 }

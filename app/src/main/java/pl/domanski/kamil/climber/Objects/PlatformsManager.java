@@ -14,18 +14,17 @@ import pl.domanski.kamil.climber.Engine.Constans;
 public class PlatformsManager {
 
     private ArrayList<Platforms> platforms;
-    private int platformWidth = Constans.SCREEN_WIDTH / 6;
-    private int platformHeight = Constans.SCREEN_HEIGHT / 30;
+    private int platformWidth;
+    private int platformHeight;
 
     public int indexColide;
     private int lastX = 0;
-    private long startTime;
-    private long initTime;
+
 
     private int xStart;
     public int score = 0;
 
-    Random rand;
+    private Random rand;
 
 
     public PlatformsManager(int platformWidth, int platformHeight) {
@@ -35,7 +34,7 @@ public class PlatformsManager {
         rand = new Random();
 
 
-        startTime = initTime = System.currentTimeMillis();
+
 
         platforms = new ArrayList<>();
 
@@ -80,7 +79,7 @@ public class PlatformsManager {
 
     private void generatePlatforms() {
 /*
-        Tu musze poprawic startową platforme                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111
+      TODO  Tu musze poprawic startową platforme                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111
 
 
         platforms.add(new Platforms(platformHeight, Constans.SCREEN_WIDTH, 0, Constans.SCREEN_HEIGHT - platformHeight, 0));
@@ -100,8 +99,8 @@ public class PlatformsManager {
 
 
             lastX = xStart;
-            int y = rand.nextInt(100);
-            platforms.add(0, new Platforms(platformHeight, platformWidth, xStart, (-300 + platforms.get(0).getRectangle().top - y), randPlatformType()));
+            int y = rand.nextInt(Constans.SCREEN_HEIGHT/19);
+            platforms.add(0, new Platforms(platformHeight, platformWidth, xStart, ((int)(-Constans.SCREEN_HEIGHT/6.4) + platforms.get(0).getRectangle().top - y), randPlatformType()));
             if (platforms.get(0).platformType == 1) {
 
                 GenerateMovingPlatformPostition();
@@ -113,10 +112,15 @@ public class PlatformsManager {
     }
 
     public void update() {
-        if (platforms.get(platforms.size() - 1).getRectangle().top >= Constans.SCREEN_HEIGHT + 100) {
+        if (platforms.get(platforms.size() - 1).getRectangle().top >= Constans.SCREEN_HEIGHT*20/19) {
 
             newPlatform();
             score += 10;
+        }
+
+        for (Platforms pl : platforms) {
+
+            pl.update();
         }
     }
 
@@ -147,10 +151,10 @@ public class PlatformsManager {
         }
         lastX = xStart;
 
-        int y = rand.nextInt(100);
+        int y = rand.nextInt(Constans.SCREEN_HEIGHT/19);
         platforms.get(0).getRectangle().left = xStart;
         platforms.get(0).getRectangle().right = xStart + platformWidth;
-        platforms.get(0).getRectangle().top = (-300 + platforms.get(0).getRectangle().top - y);
+        platforms.get(0).getRectangle().top = ((int)(-Constans.SCREEN_HEIGHT/6.4) + platforms.get(0).getRectangle().top - y);
         platforms.get(0).getRectangle().bottom = platforms.get(0).getRectangle().top + platformHeight;
 
 
@@ -170,10 +174,10 @@ public class PlatformsManager {
 
     private void GenerateMovingPlatformPostition() {
 
-        platforms.get(0).howFar = rand.nextInt(400 - 7);
+        platforms.get(0).howFar = rand.nextInt((int)(Constans.SCREEN_WIDTH/2.7) - 7);
         platforms.get(0).direction = 1;
 
-        xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH - 800 - platformWidth)) + 400;
+        xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH/3.86 - platformWidth) + Constans.SCREEN_WIDTH/2.7);
 
 
         platforms.get(0).getRectangle().left = xStart;
@@ -181,7 +185,7 @@ public class PlatformsManager {
 
     }
 
-    public void incrementY(int inY) {
+    public void incrementY(float inY) {
 
         for (Platforms pl : platforms) {
             pl.incrementY(inY);

@@ -10,9 +10,12 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+
 import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.Engine.GamePanel;
 import pl.domanski.kamil.climber.Engine.MainActivity;
+import pl.domanski.kamil.climber.Objects.Button;
 
 /**
  * Created by Kamil on 03.04.2017.
@@ -23,23 +26,24 @@ public class SettingsScene implements Scene {
     private static int sensivity;
     private final SceneManager sceneManager;
     private Rect r;
-    private Rect sensAdd;
-    private Rect sensSub;
     private Paint paint;
-    private Rect back;
+    private ArrayList<Button> buttons;
+    private int textButtonColor = Color.rgb(255, 255, 255);
+    private int backgroundButtonColor = Color.rgb(0, 120, 0);
 
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     public SettingsScene(SceneManager sceneManager) {
+        buttons = new ArrayList<Button>();
+        buttons.add(new Button(Constans.SCREEN_WIDTH * 29 / 50, Constans.SCREEN_HEIGHT * 11 / 40, Constans.SCREEN_WIDTH/6, Constans.SCREEN_WIDTH/6, "+", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
+        buttons.add(new Button(Constans.SCREEN_WIDTH * 40 / 50, Constans.SCREEN_HEIGHT * 11 / 40,  Constans.SCREEN_WIDTH/6, Constans.SCREEN_WIDTH/6, "-", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
+
         this.sceneManager = sceneManager;
         sensivity = 4;
         r = new Rect();
         paint = new Paint();
-        sensAdd = new Rect(Constans.SCREEN_WIDTH * 19 / 24, Constans.SCREEN_HEIGHT / 6 , Constans.SCREEN_WIDTH * 23 / 24, Constans.SCREEN_HEIGHT / 6 + Constans.SCREEN_HEIGHT*3/40);
-        sensSub = new Rect(Constans.SCREEN_WIDTH * 14 / 24, Constans.SCREEN_HEIGHT / 6 , Constans.SCREEN_WIDTH * 18 / 24, Constans.SCREEN_HEIGHT / 6 + Constans.SCREEN_HEIGHT*3/40);
-        back = new Rect(Constans.SCREEN_WIDTH * 3 / 5, Constans.SCREEN_HEIGHT / 4 + Constans.SCREEN_HEIGHT * 3 / 10,
-                       Constans.SCREEN_WIDTH * 9 / 10, Constans.SCREEN_HEIGHT / 4 + Constans.SCREEN_HEIGHT * 4 / 10);
 
         sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(Constans.CURRENT_CONTEXT);
 
@@ -55,21 +59,22 @@ public class SettingsScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawColor(Color.GRAY);
 
-        paint.setColor(Color.DKGRAY);
-        paint.setTextSize(Constans.SCREEN_WIDTH / 7);
-        drawCenterText(canvas, paint, "Settings:", Constans.SCREEN_HEIGHT / 5);
+
+        canvas.drawColor(Color.rgb(0, 100, 200));
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(Constans.SCREEN_WIDTH / 5);
+        drawCenterText(canvas, paint, "Settings", Constans.SCREEN_HEIGHT / 5);
 
         paint.setColor(Color.WHITE);
-        paint.setTextSize(Constans.SCREEN_WIDTH / 10);
-        //drawCenterText(canvas, paint, "ff", Constans.SCREEN_HEIGHT/4 + Constans.SCREEN_HEIGHT/10);
-        canvas.drawText("Sensivity:    " + sensivity, Constans.SCREEN_WIDTH / 10, Constans.SCREEN_HEIGHT * 3 / 10, paint);
+        paint.setTextSize(Constans.SCREEN_WIDTH / 11);
+        canvas.drawText("Sensivity: " + sensivity, Constans.SCREEN_WIDTH / 18, Constans.SCREEN_HEIGHT * 61 / 180, paint);
 
-        paint.setColor(Color.DKGRAY);
-        canvas.drawRect(back, paint);
-        canvas.drawRect(sensAdd, paint);
-        canvas.drawRect(sensSub, paint);
+        for (Button bu : buttons) {
+            bu.draw(canvas);
+        }
+
+
     }
 
     @Override
@@ -82,7 +87,22 @@ public class SettingsScene implements Scene {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                if (back.contains((int) event.getX(), (int) event.getY())) {
+                if (buttons.get(0).onClick(event)) {
+                    if(sensivity<10){
+                        sensivity++;
+                        editor.putInt("Sensivity", sensivity);
+                        editor.apply();
+                    }
+                }
+
+                if (buttons.get(1).onClick(event)) {
+                    if(sensivity>1){
+                        sensivity--;
+                        editor.putInt("Sensivity", sensivity);
+                        editor.apply();
+                    }
+                }
+      /*          if (back.contains((int) event.getX(), (int) event.getY())) {
                     if(sceneManager.getLastScene()==1)
                         sceneManager.setScene(1);
                     else if(sceneManager.getLastScene()==0)
@@ -102,7 +122,7 @@ public class SettingsScene implements Scene {
                     editor.putInt("Sensivity", sensivity);
                     editor.apply();
 
-                }
+                }*/
                 break;
 
 
@@ -126,7 +146,5 @@ public class SettingsScene implements Scene {
 
     }
 
-    public static int getSensivity() {
-        return sensivity;
-    }
+
 }

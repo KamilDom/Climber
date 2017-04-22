@@ -9,12 +9,12 @@ import pl.domanski.kamil.climber.Engine.GamePanel;
 
 public class MainThread extends Thread {
 
-    public static final int MAX_FPS = 200;
+    public static final int MAX_FPS = 70;
     public double averageFPS;
     private SurfaceHolder surfaceHolder;
     private GamePanel gamePanel;
     private boolean running;
-    public static Canvas canvas;
+    public static Canvas canvas = null;
 
     public void setRunning(boolean running) {
         this.running = running;
@@ -38,7 +38,7 @@ public class MainThread extends Thread {
 
         while (running) {
             startTime = System.nanoTime();
-            canvas = null;
+
 
             try {
                 canvas = this.surfaceHolder.lockCanvas();

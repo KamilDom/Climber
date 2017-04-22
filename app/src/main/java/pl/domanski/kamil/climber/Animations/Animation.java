@@ -13,6 +13,7 @@ public class Animation {
 
     private Bitmap[] frames;
     private int frameIndex;
+    private Paint paint;
 
     private boolean isPlaying = false;
 
@@ -37,6 +38,7 @@ public class Animation {
     private long lastFrame;
 
     public Animation(Bitmap[] frames, float animTime) {
+        paint = new Paint();
         this.frames = frames;
         frameIndex = 0;
 
@@ -45,12 +47,14 @@ public class Animation {
         lastFrame = System.currentTimeMillis();
     }
 
-    public void draw(Canvas canvas, Rect destination) {
+    public void draw(Canvas canvas, int xStart, int yStart) {
         if (!isPlaying)
             return;
-        scaleRect(destination);
+      //  scaleRect(destination);
 
-        canvas.drawBitmap(frames[frameIndex], null, destination, new Paint());
+        //canvas.drawBitmap(frames[frameIndex], null, destination, new Paint());
+        canvas.drawBitmap(frames[frameIndex], xStart, yStart, paint);
+
 
     }
 

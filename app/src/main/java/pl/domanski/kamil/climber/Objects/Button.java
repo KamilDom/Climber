@@ -27,15 +27,13 @@ public class Button implements GameObject{
     private int buttonColor;
     BitmapFactory bf = new BitmapFactory();
 
-    Bitmap button = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.menubutton);
-    Bitmap resizedBitmap;
+
 
     Bitmap buttonEdge = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.buttone_edge2);
+            R.drawable.button_edge);
 
     Bitmap buttonMiddle = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.buttone_middle);
+            R.drawable.button_middle);
 
     private Bitmap[] buttonBitmaps;
 
@@ -53,19 +51,20 @@ public class Button implements GameObject{
 
         paint = new Paint();
 
-        buttonBitmaps = buttonBitmaps(buttonEdge, buttonMiddle, buttonHeight);
+        buttonBitmaps = buttonBitmaps(buttonEdge, buttonMiddle,  buttonHeight);
 
 
     }
 
-    public Bitmap[] buttonBitmaps(Bitmap edgeSource, Bitmap middleSource, int destinationHeight){
-        float xRatio =  edgeSource.getHeight()/destinationHeight;
-        Bitmap leftEdge = getResizedBitmap(edgeSource , (int) (edgeSource.getWidth()/xRatio),destinationHeight);
+    public Bitmap[] buttonBitmaps(Bitmap edgeLeftSource, Bitmap middleSource,  int destinationHeight){
+        float xRatio =  edgeLeftSource.getHeight()/destinationHeight;
+        Bitmap leftEdge = getResizedBitmap(edgeLeftSource , (int) (edgeLeftSource.getWidth()/xRatio),destinationHeight);
 
         Bitmap middle = getResizedBitmap(middleSource,buttonWidth-2*leftEdge.getWidth(),buttonHeight);
 
         Matrix m = new Matrix();
         m.preScale(-1, 1);
+
         Bitmap rightEdge = Bitmap.createBitmap(leftEdge, 0, 0, leftEdge.getWidth(), leftEdge.getHeight(), m, false);
 
         Bitmap[] temp = {leftEdge,middle,rightEdge};
@@ -79,8 +78,6 @@ public class Button implements GameObject{
         paint.setTextSize(textSize);
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setColor(buttonColor);
-      //  canvas.drawRect(startX, startY , startX+buttonWidth , startY+buttonHeight, paint);
-        //canvas.drawBitmap(button, null, new Rect(startX, startY , startX+buttonWidth , startY+buttonHeight), paint);
         canvas.drawBitmap(buttonBitmaps[0], startX,startY, paint);
         canvas.drawBitmap(buttonBitmaps[1], startX+buttonBitmaps[0].getWidth(),startY, paint);
         canvas.drawBitmap(buttonBitmaps[2], startX+buttonBitmaps[0].getWidth()+buttonBitmaps[1].getWidth(),startY, paint);
@@ -96,8 +93,6 @@ public class Button implements GameObject{
 
     public boolean onClick(MotionEvent event){
         if (buttonRect.contains((int) event.getX(), (int) event.getY())) {
-
-
 
             return true;
         }

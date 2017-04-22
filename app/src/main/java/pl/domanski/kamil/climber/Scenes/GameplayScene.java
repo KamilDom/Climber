@@ -1,83 +1,91 @@
 package pl.domanski.kamil.climber.Scenes;
 
+
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import pl.domanski.kamil.climber.Engine.Constans;
-import pl.domanski.kamil.climber.Engine.OrientationData;
+import pl.domanski.kamil.climber.Objects.Bird;
 import pl.domanski.kamil.climber.Objects.PlatformsManager;
 import pl.domanski.kamil.climber.Objects.Player;
 import pl.domanski.kamil.climber.R;
+
 
 //Główna klasa gameplayu
 
 public class GameplayScene implements Scene {
 
     private Rect r = new Rect();
-    private Rect background;
 
 
     private SceneManager sceneManager;
-    private PauseScene pauseScene;
+    protected PauseScene pauseScene;
 
-     private Paint paint;
+    private Paint paint;
 
     private Player player;
-    private Point playerPoint;
 
+    private Bird bird;
 
     private PlatformsManager platformsManager;
+    BitmapFactory bf = new BitmapFactory();
+    BitmapFactory.Options op = new BitmapFactory.Options();
+    Bitmap sky;
 
 
     private long gameOverTime;
 
-    private OrientationData orientationData;
     private long frameTime;
 
-
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
 
     public GameplayScene(SceneManager sceneManager) {
+        op.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
 
+        sky = getResizedBitmap(bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(), R.drawable.sky3), Constans.SCREEN_WIDTH, Constans.SCREEN_HEIGHT);
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Constans.CURRENT_CONTEXT);
+        editor = sharedPreferences.edit();
 
         sceneManager.PAUSE = false;
         this.sceneManager = sceneManager;
         paint = new Paint();
         pauseScene = new PauseScene(sceneManager);
-        player = new Player(new Rect(100, 100, 250, 250), Color.rgb(200, 50, 50), 40);
-        playerPoint = new Point(Constans.SCREEN_WIDTH / 2, Constans.SCREEN_HEIGHT * 4 / 5);
-        background = new Rect(0, 0, Constans.SCREEN_WIDTH, Constans.SCREEN_HEIGHT);
-        player.update(playerPoint);
+        platformsManager = new PlatformsManager((int) (Constans.SCREEN_WIDTH * 0.23), (int) (Constans.SCREEN_HEIGHT / 24));
+        player = new Player(Constans.SCREEN_WIDTH / 2, Constans.SCREEN_HEIGHT * 4 / 5, Constans.SCREEN_WIDTH / 6,
+                Constans.SCREEN_HEIGHT / 8, sharedPreferences.getInt("Sensivity", 4), platformsManager);
 
-
-        platformsManager = new PlatformsManager((int) (Constans.SCREEN_WIDTH * 0.23), 80);
-
-        orientationData = new OrientationData();
-        orientationData.register();
         frameTime = System.currentTimeMillis();
+
+        bird = new Bird((int) (Math.random() * Constans.SCREEN_WIDTH), 0, 8, 1, 200, 170);
 
 
     }
 
     public void reset() {
+        sceneManager.setScene(0);
+        setHighscore();
         platformsManager.reset();
-        playerPoint.x = Constans.SCREEN_WIDTH / 2;
-        playerPoint.y = 3 * Constans.SCREEN_HEIGHT / 4;
-        player.update(playerPoint);
-        SceneManager.PAUSE=false;
+        player.xPos = Constans.SCREEN_WIDTH / 2;
+        player.yPos = Constans.SCREEN_HEIGHT * 4 / 5;
+        SceneManager.PAUSE = false;
         pauseScene.showConfirmScene = false;
-        player.jump();
-
-
+        player.jump((Constans.SCREEN_HEIGHT / 48));
+        SceneManager.GAMEOVER = false;
+        bird.exist = false;
 
     }
 
@@ -95,51 +103,40 @@ public class GameplayScene implements Scene {
             case MotionEvent.ACTION_DOWN:
 
 
-
-
                 if (SceneManager.GAMEOVER && System.currentTimeMillis() - gameOverTime >= 500) {
-                    sceneManager.setScene(0);
                     reset();
-                    SceneManager.GAMEOVER = false;
-                }
-
-                else if(SceneManager.PAUSE)
+                } else if (SceneManager.PAUSE)
                     pauseScene.recieveTouch(event);
-                    break;
-
+                break;
 
 
         }
     }
 
 
-
     @Override
     public void draw(Canvas canvas) {
 
-       canvas.drawColor(Color.rgb(91, 173, 235));
+        // canvas.drawColor(Color.rgb(91, 173, 235));
+        canvas.drawBitmap(sky, 0, 0, paint);
 
         platformsManager.draw(canvas);
+        bird.draw(canvas);
         player.draw(canvas);
         paint.setColor(Color.YELLOW);
-        paint.setTextSize(50);
+        paint.setTextSize(Constans.SCREEN_WIDTH / 22);
         canvas.drawText("Score: " + String.valueOf(platformsManager.score), 50, 50, paint);
 
 
         if (SceneManager.GAMEOVER) {
-            paint.setTextSize(100);
+            paint.setTextSize(Constans.SCREEN_WIDTH / 11);
             paint.setColor(Color.MAGENTA);
             getCenterCorinate(canvas, "Game Over");
 
-            canvas.drawText("Game Over",(getCenterCorinate(canvas, "Game Over")[0]),(getCenterCorinate(canvas, "Game Over")[1]) , paint);
+            canvas.drawText("Game Over", (getCenterCorinate(canvas, "Game Over")[0]), (getCenterCorinate(canvas, "Game Over")[1]), paint);
 
 
-        }
-
-
-
-
-        else if (sceneManager.PAUSE && !SceneManager.GAMEOVER){
+        } else if (sceneManager.PAUSE && !SceneManager.GAMEOVER) {
             pauseScene.draw(canvas);
 
         }
@@ -147,67 +144,48 @@ public class GameplayScene implements Scene {
     }
 
 
-
-
-
-
     @Override
     public void update() {
 
-
         if (!SceneManager.GAMEOVER && !sceneManager.PAUSE) {
 
-            if (frameTime < Constans.INIT_TIME)
-                frameTime = Constans.INIT_TIME;
-            int elapsedTime = (int) (System.currentTimeMillis() - frameTime);
-            frameTime = System.currentTimeMillis();
 
-            float xSpeed;
-            playerPoint.x -= Math.abs(orientationData.getOrientation() * elapsedTime)*sceneManager.getSensivity()/9 > 4 ? orientationData.getOrientation()*sceneManager.getSensivity()/9 * elapsedTime : 0;
+            if (platformsManager.playerCollide(player) && player.jumpState == 1) {
+                player.yPos = platformsManager.getPlatformColideTop() - player.playerHeight * 3 / 4;
 
+                if (platformsManager.getPlatformType(platformsManager.indexColide) == 2)
+                    player.jump(Constans.SCREEN_HEIGHT / 25);
+                else
+                    player.jump(Constans.SCREEN_HEIGHT / 48);
+            }
 
-                if (platformsManager.playerCollide(player) && player.jumpState == 1) {
-                    playerPoint.y = platformsManager.getPlatformColideTop() - player.getRectangle().height() / 4;
-                    if (platformsManager.getPlatformType(platformsManager.indexColide) == 2)
-                        player.jump(120);
-                    else
-                        player.jump();
-                }
-
-                if (player.jumpState == 1)
-                    playerPoint.y -= player.jumpVector();
-                else {
-                    if (playerPoint.y > Constans.SCREEN_HEIGHT / 3) {
-                        playerPoint.y -= player.jumpVector();
-
-                    } else {
-                        platformsManager.incrementY(player.jumpVector());
-
-                    }
-                }
+            if (player.jumpState == 0 && player.yPos <= Constans.SCREEN_HEIGHT * 7 / 24)
+                bird.incrementY(player.getJumpVector());
 
 
-
-
-                if (playerPoint.x < -player.getRectangle().width() / 4)
-                    playerPoint.x = Constans.SCREEN_WIDTH + player.getRectangle().width() / 4;
-                else if (playerPoint.x > Constans.SCREEN_WIDTH + player.getRectangle().width() / 4)
-                    playerPoint.x = -player.getRectangle().width() / 4;
-
-
-                platformsManager.playerCollide(player);
-
-                if (playerPoint.y < 0) playerPoint.y = 0;
-
-
-
-
-            player.update(playerPoint);
+            platformsManager.playerCollide(player);
+            player.update();
             platformsManager.update();
-            if (playerPoint.y > Constans.SCREEN_HEIGHT) {
-                SceneManager.GAMEOVER = true;
-                gameOverTime = System.currentTimeMillis();
 
+
+            if (bird.exist) {
+                bird.update();
+                if (player.getPlayerRect().intersect(bird.getBirdRect().left + bird.getBirdRect().width() / 5, bird.getBirdRect().top + bird.getBirdRect().height() / 5,
+                        bird.getBirdRect().right - bird.getBirdRect().width() / 5, bird.getBirdRect().bottom - bird.getBirdRect().height() / 5)) {
+                    if (player.getPlayerRect().bottom < bird.getBirdRect().bottom){
+                        player.jump(Constans.SCREEN_HEIGHT / 48);
+                    } else {
+                        SceneManager.GAMEOVER = true;
+                    }
+
+                }
+            } else if (!bird.exist && platformsManager.score > 200 && (int) (Math.random() * 1000) == 0) {
+                bird.reset();
+
+            }
+
+            if (player.yPos > Constans.SCREEN_HEIGHT) {
+                SceneManager.GAMEOVER = true;
             }
         }
     }
@@ -221,8 +199,39 @@ public class GameplayScene implements Scene {
         float x = cWidth / 2f - r.width() / 2f - r.left;
         float y = cHeight / 2f + r.height() / 2f - r.bottom;
 
-        float[] cordinate ={x,y};
+        float[] cordinate = {x, y};
         return cordinate;
+
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
+    }
+
+    public void setHighscore() {
+        for (int i = 0; i < sceneManager.highscoreScene.highscore.length; i++) {
+            if (platformsManager.score > sceneManager.highscoreScene.highscore[i]) {
+                for (int k = sceneManager.highscoreScene.highscore.length - 2; k >= i; k--) {
+                    sceneManager.highscoreScene.highscore[k + 1] = sceneManager.highscoreScene.highscore[k];
+                }
+                sceneManager.highscoreScene.highscore[i] = platformsManager.score;
+                i = 20;
+            }
+        }
+        sceneManager.highscoreScene.setHighscore();
+
 
     }
 

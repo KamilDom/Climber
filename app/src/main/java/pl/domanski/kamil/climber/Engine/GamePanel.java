@@ -22,6 +22,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private static SceneManager manager;
     Paint paint = new Paint();
 
+
     public GamePanel(Context context){
         super(context);
         getHolder().addCallback(this);
@@ -29,7 +30,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         thread = new MainThread(getHolder(), this);
         manager = new SceneManager();
-       // getHolder().setFormat(PixelFormat.RGBA_8888);
+        getHolder().setFormat(PixelFormat.RGBX_8888);
+
         setFocusable(true);
     }
 
@@ -74,7 +76,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public void update() {
 
-        manager.update();
+            manager.update();
+
     }
 
     @Override
@@ -93,5 +96,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
 
-
+    public void onPause() {
+        manager.onPause();
+    }
 }

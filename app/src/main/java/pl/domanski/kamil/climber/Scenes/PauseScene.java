@@ -37,7 +37,7 @@ public class PauseScene implements Scene {
         buttons.add(new Button((Constans.SCREEN_WIDTH - Constans.SCREEN_WIDTH * 24 / 45)/2, Constans.SCREEN_HEIGHT * 41 / 90, Constans.SCREEN_WIDTH * 24 / 45, Constans.SCREEN_HEIGHT *8/ 90, "Settings", Constans.SCREEN_WIDTH *8/ 90, textButtonColor, backgroundButtonColor));
         buttons.add(new Button((Constans.SCREEN_WIDTH - Constans.SCREEN_WIDTH * 24 / 45)/2, Constans.SCREEN_HEIGHT * 109 / 180, Constans.SCREEN_WIDTH * 24 / 45, Constans.SCREEN_HEIGHT *8/ 90, "Menu", Constans.SCREEN_WIDTH *8/ 90, textButtonColor, backgroundButtonColor));
 
-        confirmScene = new ConfirmScene(sceneManager);
+        confirmScene = new ConfirmScene("Are you sure ", "you want to exit?");
 
 
     }
@@ -83,7 +83,7 @@ public class PauseScene implements Scene {
                 if (buttons.get(0).onClick(event)) {
                     SceneManager.PAUSE = false;
                 } else if (buttons.get(1).onClick(event)) {
-                    sceneManager.setScene(2);
+                    sceneManager.setScene(3);
                 } else if (buttons.get(2).onClick(event)){
                     showConfirmScene = true;
                 }

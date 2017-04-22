@@ -5,11 +5,6 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
-import pl.domanski.kamil.climber.Scenes.AboutScene;
-import pl.domanski.kamil.climber.Scenes.GameplayScene;
-import pl.domanski.kamil.climber.Scenes.MenuScene;
-import pl.domanski.kamil.climber.Scenes.Scene;
-
 /**
  * Created by Kamil on 19.03.2017.
  */
@@ -18,8 +13,8 @@ public class SceneManager {
 
     public static final int MENUSTATE = 0;
     public static final int GAMESTATE = 1;
-    public static final int SETTINGSTATE = 2;
-    public static final int ABOUSTATE = 3;
+    public static final int HIGHSCORESTATE = 2;
+    public static final int SETTINGSTATE = 3;
 
     public static boolean PAUSE = false;
     public static boolean GAMEOVER = false;
@@ -28,14 +23,17 @@ public class SceneManager {
     private int lastScene;
 
     private ArrayList<Scene> scenes = new ArrayList<>();
+    private MenuScene menuScene = new MenuScene(this);
     private GameplayScene gameplayScene = new GameplayScene(this);
+    public HighscoreScene highscoreScene = new HighscoreScene(this);
+    private SettingsScene settingsScene = new SettingsScene(this);
 
     public SceneManager() {
 
-        scenes.add(new MenuScene(this));
+        scenes.add(menuScene);
         scenes.add(gameplayScene);
-        scenes.add(new SettingsScene(this));
-        scenes.add(new AboutScene(this));
+        scenes.add(highscoreScene);
+        scenes.add(settingsScene);
 
 
     }
@@ -61,29 +59,40 @@ public class SceneManager {
     }
 
     public void OnBackPressed() {
-        if(ACTIVE_SCENE==ABOUSTATE){
-            ACTIVE_SCENE = MENUSTATE;
+        if (ACTIVE_SCENE == HIGHSCORESTATE) {
+            setScene(lastScene);
+        } else if (ACTIVE_SCENE == GAMESTATE) {
+            if (gameplayScene.pauseScene.showConfirmScene == true)
+                gameplayScene.pauseScene.showConfirmScene = false;
+            else if (GAMEOVER) {
+                gameplayScene.reset();
+                setScene(0);
+            } else
+                PAUSE = !PAUSE;
+        } else if (ACTIVE_SCENE == SETTINGSTATE) {
+            setScene(lastScene);
+        } else if (ACTIVE_SCENE == MENUSTATE) {
+            if (menuScene.showConfirmScene == true)
+                menuScene.showConfirmScene = false;
+            else menuScene.showConfirmScene = true;
         }
 
-        else if(ACTIVE_SCENE==GAMESTATE){
-            PAUSE = !PAUSE;
-        }
+
     }
 
-    public int getLastScene(){
+    public int getLastScene() {
 
         return lastScene;
     }
 
-    public int getSensivity(){
 
-        return SettingsScene.getSensivity();
-    }
+    public void resetGame() {
 
-    public void resetGame(){
         gameplayScene.reset();
     }
 
 
-
+    public void onPause() {
+        PAUSE = true;
+    }
 }

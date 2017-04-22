@@ -3,7 +3,6 @@ package pl.domanski.kamil.climber.Objects;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -21,15 +20,16 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
     public int platformType;
     private Paint paint;
     public int direction;
-    public int howFar = 400;
+    public int howFar = (int)(Constans.SCREEN_WIDTH/2.7);
+    private int movPlatinc = (int)(Constans.SCREEN_WIDTH/180);
 
 
     BitmapFactory bf = new BitmapFactory();
 
     Bitmap platform1 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.grass);
+            R.drawable.platform);
     Bitmap platform2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.plat2);
+            R.drawable.platform_super);
 
     Bitmap resizedPlatform1;
     Bitmap resizedPlatform2;
@@ -62,10 +62,10 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
     public boolean playerColide(Player player) {
 
 
-        if (player.getRectangle().bottom > rectangle.top - 50
-                && player.getRectangle().bottom < rectangle.top + rectangle.height() / 2
-                && player.getRectangle().left < rectangle.right
-                && player.getRectangle().right > rectangle.left)
+        if (player.yPos+player.playerHeight > rectangle.top - 30
+                && player.yPos+player.playerHeight < rectangle.top + rectangle.height() / 2
+                && player.xPos < rectangle.right
+                && player.xPos+player.playerWidth > rectangle.left)
             return true;
 
         else return false;
@@ -76,34 +76,30 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
     public void draw(Canvas canvas) {
 
 
-        paint.setColor(Color.RED);
+
         if (platformType == 0) {
-          //  canvas.drawBitmap(platform2, null, rectangle, paint);
             canvas.drawBitmap(resizedPlatform1,rectangle.left, rectangle.top ,paint);
         } else if (platformType == 2) {
-            //canvas.drawBitmap(platform3, null, rectangle, paint);
             canvas.drawBitmap(resizedPlatform2,rectangle.left, rectangle.top ,paint);
         } else {
-          //  canvas.drawBitmap(platform2, null, rectangle, paint);
             canvas.drawBitmap(resizedPlatform1,rectangle.left, rectangle.top ,paint);
-            if (!SceneManager.PAUSE && !SceneManager.GAMEOVER)
-                movingPlatform();
+
         }
     }
 
     private void movingPlatform() {
 
         if (direction == 0) {
-            rectangle.right += 6;
-            rectangle.left += 6;
-            howFar -= 6;
+            rectangle.right += movPlatinc;
+            rectangle.left += movPlatinc;
+            howFar -= movPlatinc;
             if (howFar < 0)
                 direction = 1;
         } else {
-            rectangle.right -= 6;
-            rectangle.left -= 6;
-            howFar += 6;
-            if (howFar > 400)
+            rectangle.right -= movPlatinc;
+            rectangle.left -= movPlatinc;
+            howFar += movPlatinc;
+            if (howFar > (int)(Constans.SCREEN_WIDTH/2.7))
                 direction = 0;
         }
 
@@ -127,7 +123,8 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
 
     @Override
     public void update() {
-
+        if (!SceneManager.PAUSE && !SceneManager.GAMEOVER && platformType == 1)
+            movingPlatform();
     }
 
 }
