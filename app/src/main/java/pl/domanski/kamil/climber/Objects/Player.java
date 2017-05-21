@@ -3,7 +3,9 @@ package pl.domanski.kamil.climber.Objects;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 import pl.domanski.kamil.climber.Animations.Animation;
@@ -24,7 +26,7 @@ public class Player implements GameObject {
     public int playerWidth;
     public int playerHeight;
 
-    private int sensivity;
+    public int sensivity;
 
    /* private Animation idle;
     private Animation walkRight;
@@ -56,30 +58,7 @@ public class Player implements GameObject {
         orientationData.register();
 
         BitmapFactory bf = new BitmapFactory();
-  /*      Bitmap idleImg = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-                R.drawable.alienbluey);
-        Bitmap walk1 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-                R.drawable.alienblue_walk1y);
-        Bitmap walk2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-                R.drawable.alienblue_walk2y);
 
-        idleImg = getResizedBitmap(idleImg, playerWidth, playerHeight);
-        walk1 = getResizedBitmap(walk1, playerWidth, playerHeight);
-        walk2 = getResizedBitmap(walk2, playerWidth, playerHeight);
-
-        idle = new Animation(new Bitmap[]{idleImg}, 2);
-        walkRight = new Animation(new Bitmap[]{walk1, walk2}, 0.4f);
-
-
-        Matrix m = new Matrix();
-        m.preScale(-1, 1);
-        walk1 = Bitmap.createBitmap(walk1, 0, 0, walk1.getWidth(), walk1.getHeight(), m, false);
-        walk2 = Bitmap.createBitmap(walk2, 0, 0, walk2.getWidth(), walk2.getHeight(), m, false);
-
-        walkLeft = new Animation(new Bitmap[]{walk1, walk2}, 0.4f);
-
-
-        animManager = new AnimationManager(new Animation[]{idle, walkRight, walkLeft});*/
         Bitmap upImg = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
                 R.drawable.boy_rise);
         Bitmap downImg = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
@@ -132,11 +111,6 @@ public class Player implements GameObject {
             }
         }
 
-    /*    int state = 0;
-        if (xPos - oldX > 3)
-            state = 1;
-        else if (xPos - oldX < -3)
-            state = 2;*/
 
         if (xPos - oldX > 3 && jumpState == 0){
             state = 0;

@@ -47,6 +47,7 @@ public class ConfirmScene implements Scene {
         paint.setColor(  Color.rgb(0, 100 , 200));
         canvas.drawRect(Constans.SCREEN_WIDTH/11, Constans.SCREEN_HEIGHT*11/32, Constans.SCREEN_WIDTH*10/11, Constans.SCREEN_HEIGHT*21/32,paint);
         paint.setColor(textButtonColor);
+        paint.setTypeface(Constans.font);
         paint.setTextSize(Constans.SCREEN_WIDTH *7/ 90);
         canvas.drawText(text, Constans.SCREEN_WIDTH *238/1485,  Constans.SCREEN_HEIGHT*13/32, paint);
         canvas.drawText(text2, Constans.SCREEN_WIDTH *238/1485,  Constans.SCREEN_HEIGHT*13/32  + Constans.SCREEN_WIDTH *8/ 90, paint);

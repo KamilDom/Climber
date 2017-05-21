@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.view.MotionEvent;
 
 import pl.domanski.kamil.climber.Engine.Constans;
@@ -25,6 +26,7 @@ public class Button implements GameObject{
     private Rect buttonRect;
     private int textColor;
     private int buttonColor;
+
     BitmapFactory bf = new BitmapFactory();
 
 
@@ -37,7 +39,6 @@ public class Button implements GameObject{
 
     private Bitmap[] buttonBitmaps;
 
-
     public Button(int startX, int startY, int buttonWidth, int buttonHeight, String buttonText, int textSize, int textColor, int buttonColor){
         this.startX=startX;
         this.startY=startY;
@@ -48,7 +49,6 @@ public class Button implements GameObject{
         this.buttonColor=buttonColor;
         this.textColor = textColor;
         buttonRect = new Rect(startX, startY, startX+buttonWidth, startY+buttonHeight);
-
         paint = new Paint();
 
         buttonBitmaps = buttonBitmaps(buttonEdge, buttonMiddle,  buttonHeight);
@@ -81,7 +81,7 @@ public class Button implements GameObject{
         canvas.drawBitmap(buttonBitmaps[0], startX,startY, paint);
         canvas.drawBitmap(buttonBitmaps[1], startX+buttonBitmaps[0].getWidth(),startY, paint);
         canvas.drawBitmap(buttonBitmaps[2], startX+buttonBitmaps[0].getWidth()+buttonBitmaps[1].getWidth(),startY, paint);
-
+        paint.setTypeface(Constans.font);
         paint.setColor(textColor);
         canvas.drawText(buttonText,startX+(buttonWidth-paint.measureText(buttonText))/2,startY+buttonHeight/2+textSize/4, paint);
     }
@@ -114,5 +114,9 @@ public class Button implements GameObject{
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         bm.recycle();
         return resizedBitmap;
+    }
+
+    public void updateText(String text){
+        buttonText = text;
     }
 }

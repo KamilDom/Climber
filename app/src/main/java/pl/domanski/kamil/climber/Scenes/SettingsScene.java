@@ -24,6 +24,7 @@ public class SettingsScene implements Scene {
 
 
     private static int sensivity;
+    private boolean vibration;
     private final SceneManager sceneManager;
     private Rect r;
     private Paint paint;
@@ -39,6 +40,7 @@ public class SettingsScene implements Scene {
         buttons = new ArrayList<Button>();
         buttons.add(new Button(Constans.SCREEN_WIDTH * 29 / 50, Constans.SCREEN_HEIGHT * 11 / 40, Constans.SCREEN_WIDTH/6, Constans.SCREEN_WIDTH/6, "+", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
         buttons.add(new Button(Constans.SCREEN_WIDTH * 40 / 50, Constans.SCREEN_HEIGHT * 11 / 40,  Constans.SCREEN_WIDTH/6, Constans.SCREEN_WIDTH/6, "-", Constans.SCREEN_WIDTH / 10, textButtonColor, backgroundButtonColor));
+        buttons.add(new Button(Constans.SCREEN_WIDTH * 29 / 50, Constans.SCREEN_HEIGHT * 17 / 40,  Constans.SCREEN_WIDTH*29/75, Constans.SCREEN_WIDTH/6, "Turn on", Constans.SCREEN_WIDTH / 12, textButtonColor, backgroundButtonColor));
 
         this.sceneManager = sceneManager;
         sensivity = 4;
@@ -49,7 +51,13 @@ public class SettingsScene implements Scene {
 
         editor = sharedPreferences.edit();
         sensivity = sharedPreferences.getInt("Sensivity", 4);
+        vibration = sharedPreferences.getBoolean("Vibration", false);
 
+        if (vibration) {
+            buttons.get(2).updateText("Turn off");
+        } else {
+            buttons.get(2).updateText("Turn on");
+        }
     }
 
     @Override
@@ -63,13 +71,18 @@ public class SettingsScene implements Scene {
 
         canvas.drawColor(Color.rgb(0, 100, 200));
         paint.setColor(Color.WHITE);
+        paint.setTypeface(Constans.font);
+
         paint.setTextSize(Constans.SCREEN_WIDTH / 5);
         drawCenterText(canvas, paint, "Settings", Constans.SCREEN_HEIGHT / 5);
 
         paint.setColor(Color.WHITE);
-        paint.setTextSize(Constans.SCREEN_WIDTH / 11);
-        canvas.drawText("Sensivity: " + sensivity, Constans.SCREEN_WIDTH / 18, Constans.SCREEN_HEIGHT * 61 / 180, paint);
-
+        paint.setTextSize(Constans.SCREEN_WIDTH / 13);
+        canvas.drawText("Sensivity: " + sensivity, Constans.SCREEN_WIDTH / 45, Constans.SCREEN_HEIGHT * 61 / 180, paint);
+        if(vibration)
+             canvas.drawText("Vibration: " + "On", Constans.SCREEN_WIDTH / 45, Constans.SCREEN_HEIGHT * 22 / 45, paint);
+        else
+            canvas.drawText("Vibration: " + "Off", Constans.SCREEN_WIDTH / 45, Constans.SCREEN_HEIGHT * 22 / 45, paint);
         for (Button bu : buttons) {
             bu.draw(canvas);
         }
@@ -90,6 +103,7 @@ public class SettingsScene implements Scene {
                 if (buttons.get(0).onClick(event)) {
                     if(sensivity<10){
                         sensivity++;
+                        sceneManager.gameplayScene.player.sensivity++;
                         editor.putInt("Sensivity", sensivity);
                         editor.apply();
                     }
@@ -98,31 +112,29 @@ public class SettingsScene implements Scene {
                 if (buttons.get(1).onClick(event)) {
                     if(sensivity>1){
                         sensivity--;
+                        sceneManager.gameplayScene.player.sensivity--;
                         editor.putInt("Sensivity", sensivity);
                         editor.apply();
                     }
                 }
-      /*          if (back.contains((int) event.getX(), (int) event.getY())) {
-                    if(sceneManager.getLastScene()==1)
-                        sceneManager.setScene(1);
-                    else if(sceneManager.getLastScene()==0)
-                    sceneManager.setScene(0);
+
+                if(buttons.get(2).onClick(event)) {
+                    if (vibration) {
+                        buttons.get(2).updateText("Turn on");
+                        editor.putBoolean("Vibration", false);
+                        sceneManager.gameplayScene.vibration = false;
+                        editor.apply();
+                        vibration = false;
+                    } else {
+                        buttons.get(2).updateText("Turn off");
+                        editor.putBoolean("Vibration", true);
+                        sceneManager.gameplayScene.vibration = true;
+                        editor.apply();
+                        vibration = true;
+                    }
 
                 }
 
-               else if (sensAdd.contains((int) event.getX(), (int) event.getY()) && sensivity<10) {
-                    sensivity++;
-                    editor.putInt("Sensivity", sensivity);
-                    editor.apply();
-
-                }
-
-                else if (sensSub.contains((int) event.getX(), (int) event.getY()) && sensivity > 1) {
-                    sensivity--;
-                    editor.putInt("Sensivity", sensivity);
-                    editor.apply();
-
-                }*/
                 break;
 
 

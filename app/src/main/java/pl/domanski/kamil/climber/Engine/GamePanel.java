@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,6 +28,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         super(context);
         getHolder().addCallback(this);
         Constans.CURRENT_CONTEXT = context;
+        Constans.font = Typeface.createFromAsset(Constans.CURRENT_CONTEXT.getAssets(), "Marker.ttf" );
 
         thread = new MainThread(getHolder(), this);
         manager = new SceneManager();

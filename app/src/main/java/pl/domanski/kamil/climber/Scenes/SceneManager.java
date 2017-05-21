@@ -1,9 +1,12 @@
 package pl.domanski.kamil.climber.Scenes;
 
 import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
+
+import pl.domanski.kamil.climber.Engine.Constans;
 
 /**
  * Created by Kamil on 19.03.2017.
@@ -19,17 +22,17 @@ public class SceneManager {
     public static boolean PAUSE = false;
     public static boolean GAMEOVER = false;
 
+
     private int ACTIVE_SCENE = MENUSTATE;
     private int lastScene;
 
     private ArrayList<Scene> scenes = new ArrayList<>();
     private MenuScene menuScene = new MenuScene(this);
-    private GameplayScene gameplayScene = new GameplayScene(this);
+    public GameplayScene gameplayScene = new GameplayScene(this);
     public HighscoreScene highscoreScene = new HighscoreScene(this);
     private SettingsScene settingsScene = new SettingsScene(this);
 
     public SceneManager() {
-
         scenes.add(menuScene);
         scenes.add(gameplayScene);
         scenes.add(highscoreScene);

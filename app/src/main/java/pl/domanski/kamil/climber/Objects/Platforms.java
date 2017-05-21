@@ -7,6 +7,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import pl.domanski.kamil.climber.Animations.Animation;
+import pl.domanski.kamil.climber.Animations.AnimationManager;
 import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.R;
 import pl.domanski.kamil.climber.Scenes.SceneManager;
@@ -22,17 +24,25 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
     public int direction;
     public int howFar = (int)(Constans.SCREEN_WIDTH/2.7);
     private int movPlatinc = (int)(Constans.SCREEN_WIDTH/180);
+    private boolean playAnim = false;
 
 
     BitmapFactory bf = new BitmapFactory();
 
     Bitmap platform1 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
             R.drawable.platform);
-    Bitmap platform2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+    Bitmap platform_super = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
             R.drawable.platform_super);
+    Bitmap platform_super2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+            R.drawable.platform_super2);
+    Bitmap platform_super3 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+            R.drawable.platform_super3);
+    Bitmap platform2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+            R.drawable.mplatform);
 
-    Bitmap resizedPlatform1;
-    Bitmap resizedPlatform2;
+    private Animation platAnim;
+    private Animation platSuperIdle;
+    private AnimationManager animManager;
 
 
     public Rect getRectangle() {
@@ -50,10 +60,19 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
     public Platforms(int platformHeight, int platformWidth, int startX, int startY, int platType) {
 
         paint = new Paint();
-        resizedPlatform1 = getResizedBitmap(platform1 ,platformWidth,platformHeight);
-        resizedPlatform2 = getResizedBitmap(platform2 ,platformWidth,platformHeight);
+        platform1 = getResizedBitmap(platform1 ,platformWidth,platformHeight);
+        platform2 = getResizedBitmap(platform2 ,platformWidth,platformHeight);
+        platform_super = getResizedBitmap(platform_super ,platformWidth,platformHeight);
+        platform_super2 = getResizedBitmap(platform_super2 ,platformWidth,platformHeight);
+        platform_super3 = getResizedBitmap(platform_super3 ,platformWidth,platformHeight);
+
         rectangle = new Rect(startX, startY, startX + platformWidth, startY + platformHeight);
         platformType = platType;
+
+        platAnim = new Animation(new Bitmap[]{platform_super, platform_super2,platform_super3,platform_super2, platform_super},0.2f);
+        platSuperIdle = new Animation(new Bitmap[]{platform_super},1f);
+
+        animManager = new AnimationManager(new Animation[]{platSuperIdle, platAnim});
 
 
     }
@@ -75,14 +94,23 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
     @Override
     public void draw(Canvas canvas) {
 
-
-
         if (platformType == 0) {
-            canvas.drawBitmap(resizedPlatform1,rectangle.left, rectangle.top ,paint);
-        } else if (platformType == 2) {
-            canvas.drawBitmap(resizedPlatform2,rectangle.left, rectangle.top ,paint);
+            canvas.drawBitmap(platform1,rectangle.left, rectangle.top ,paint);
+            playAnim=false;
+        } else if (platformType == 1) {
+            canvas.drawBitmap(platform2,rectangle.left, rectangle.top ,paint);
+            playAnim=false;
         } else {
-            canvas.drawBitmap(resizedPlatform1,rectangle.left, rectangle.top ,paint);
+            if(!playAnim){
+                canvas.drawBitmap(platform_super,rectangle.left, rectangle.top ,paint);
+            }
+            else{
+                animManager.draw(canvas,rectangle.left, rectangle.top);
+                animManager.playAnim(1);
+                animManager.update();
+            }
+
+
 
         }
     }
@@ -125,6 +153,10 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
     public void update() {
         if (!SceneManager.PAUSE && !SceneManager.GAMEOVER && platformType == 1)
             movingPlatform();
+    }
+
+    public void playAnim(){
+        playAnim=true;
     }
 
 }

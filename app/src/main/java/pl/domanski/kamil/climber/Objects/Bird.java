@@ -15,9 +15,6 @@ import pl.domanski.kamil.climber.Engine.MainActivity;
 import pl.domanski.kamil.climber.GameObject;
 import pl.domanski.kamil.climber.R;
 
-/**
- * Created by Kamil on 16.04.2017.
- */
 
 public class Bird implements GameObject {
 
@@ -27,24 +24,32 @@ public class Bird implements GameObject {
     private int direction;
     private int birdWidth;
     private int birdHeight;
+    public boolean dead;
+    private int deadSpeed;
+    public boolean playDeadScore = false;
+    private int xPosDeadScore;
+    private float yPosDeadScore;
+    private long startDeadScore;
+    private long deadScoreLength = 1000;
+    private float deadScoreTextSize = 30;
 
     private Animation birdLeft;
     private Animation birdRight;
+    private Animation deadBirdLeft;
+    private Animation deadBirdRight;
     private Animation warningAnim;
     private AnimationManager animManager;
     private AnimationManager warning;
 
-    BitmapFactory bf = new BitmapFactory();
-    private Bitmap bird1 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.bird1);
-    private Bitmap bird2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.bird2);
-    private Bitmap warningSign = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-       R.drawable.warning);
-    private Bitmap blank = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
-            R.drawable.blank);
-
     private Paint paint;
+
+    BitmapFactory bf = new BitmapFactory();
+    private Bitmap bird1 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(), R.drawable.bird1);
+    private Bitmap bird2 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(), R.drawable.bird2);
+    private Bitmap bird3 = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(), R.drawable.dead_bird);
+    private Bitmap warningSign = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(), R.drawable.warning);
+    private Bitmap blank = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(), R.drawable.blank);
+
     public boolean exist = false;
 
     public Bird(int xPos, int yPos, int speed, int direction, int birdWidth, int birdHeight) {
@@ -55,30 +60,30 @@ public class Bird implements GameObject {
         this.birdWidth = birdWidth;
         this.birdHeight = birdHeight;
         paint = new Paint();
-
-
-
-
-
+        paint.setTypeface(Constans.font);
+        paint.setColor(Color.YELLOW);
         bird1 = getResizedBitmap(bird1, birdWidth, birdHeight);
         bird2 = getResizedBitmap(bird2, birdWidth, birdHeight);
-        warningSign = getResizedBitmap(warningSign, Constans.SCREEN_WIDTH/20, Constans.SCREEN_HEIGHT/15);
+        bird3 = getResizedBitmap(bird3, birdWidth, birdHeight);
 
-        birdRight = new Animation(new Bitmap[]{bird1,bird2},0.2f);
+        warningSign = getResizedBitmap(warningSign, Constans.SCREEN_WIDTH / 20, Constans.SCREEN_HEIGHT / 15);
+
+        birdRight = new Animation(new Bitmap[]{bird1, bird2}, 0.3f);
+        deadBirdRight = new Animation(new Bitmap[]{bird3}, 1f);
 
         Matrix m = new Matrix();
         m.preScale(-1, 1);
         bird1 = Bitmap.createBitmap(bird1, 0, 0, bird1.getWidth(), bird1.getHeight(), m, false);
         bird2 = Bitmap.createBitmap(bird2, 0, 0, bird2.getWidth(), bird2.getHeight(), m, false);
+        bird3 = Bitmap.createBitmap(bird3, 0, 0, bird3.getWidth(), bird3.getHeight(), m, false);
 
-        birdLeft = new Animation(new Bitmap[]{bird1,bird2},0.2f);
+        birdLeft = new Animation(new Bitmap[]{bird1, bird2}, 0.3f);
+        deadBirdLeft = new Animation(new Bitmap[]{bird3}, 1f);
 
-        warningAnim = new Animation(new Bitmap[]{warningSign,blank}, 0.9f);
+        warningAnim = new Animation(new Bitmap[]{warningSign, blank}, 0.9f);
 
-        animManager = new AnimationManager(new Animation[]{birdLeft, birdRight});
+        animManager = new AnimationManager(new Animation[]{birdLeft, birdRight, deadBirdLeft, deadBirdRight});
         warning = new AnimationManager(new Animation[]{warningAnim});
-
-
     }
 
     @Override
@@ -86,61 +91,89 @@ public class Bird implements GameObject {
 
 
         if (exist) {
-            if(yPos<0)
-            warning.draw(canvas,Constans.SCREEN_WIDTH/10,Constans.SCREEN_HEIGHT/19);
+            if (yPos < 0)
+                warning.draw(canvas, Constans.SCREEN_WIDTH / 10, Constans.SCREEN_HEIGHT / 19);
             animManager.draw(canvas, xPos, yPos);
         }
+
+        if (playDeadScore) {
+            paint.setTextSize(deadScoreTextSize);
+            deadScoreTextSize+=Constans.SCREEN_HEIGHT/800;
+            canvas.drawText("+200", xPosDeadScore, yPosDeadScore, paint);
+            yPosDeadScore-=Constans.SCREEN_HEIGHT/400;
+        }
+
+
+
 
     }
 
     @Override
     public void update() {
 
+        if (playDeadScore &&  System.currentTimeMillis() - deadScoreLength > startDeadScore) {
+            playDeadScore = false;
+        }
 
         if (exist) {
             if (direction == 0) {
                 xPos += speed;
-                if (xPos + birdWidth >= Constans.SCREEN_WIDTH) {
-                    direction = 1;
+                if (!dead) {
+                    if (xPos + birdWidth >= Constans.SCREEN_WIDTH) {
+                        direction = 1;
+                    }
                 }
             } else if (direction == 1) {
                 xPos -= speed;
-                if (xPos <= 0) {
-                    direction = 0;
+                if (!dead) {
+                    if (xPos <= 0) {
+                        direction = 0;
+                    }
                 }
             }
 
+            warning.playAnim(0);
+            warning.update();
         }
 
-        animManager.playAnim(direction);
-        animManager.update();
-        warning.playAnim(0);
-        warning.update();
+        if (dead) {
+            animManager.playAnim(direction + 2);
+            yPos += deadSpeed;
+            deadSpeed++;
+        }
+        else{
+            animManager.playAnim(direction);
+        }
 
-        if(yPos>Constans.SCREEN_HEIGHT+10){
-            exist=false;
-            yPos=0;
+        animManager.update();
+
+
+        if (yPos > Constans.SCREEN_HEIGHT + 10) {
+            exist = false;
+            dead = true;
+            yPos = 0;
         }
 
 
     }
 
     public void incrementY(float y) {
-        yPos+=y;
+        yPos += y;
     }
 
     public void reset() {
-        yPos=-Constans.SCREEN_HEIGHT/2;
-        xPos= (int) (Math.random()*(Constans.SCREEN_WIDTH-birdWidth));
-        direction = (int) (Math.random()*3-1);
-        exist=true;
+        yPos = -Constans.SCREEN_HEIGHT / 2;
+        xPos = (int) (Math.random() * (Constans.SCREEN_WIDTH - birdWidth));
+        direction = (int) (Math.random() * 3 - 1);
+        exist = true;
+        dead = false;
+        deadSpeed = 0;
     }
 
 
-    public Rect getBirdRect(){
-        return new Rect(xPos , yPos, xPos+birdWidth, yPos+birdHeight);
+    public Rect getBirdRect() {
+        return new Rect(xPos, yPos, xPos + birdWidth, yPos + birdHeight);
     }
-
 
 
     public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
@@ -148,14 +181,19 @@ public class Bird implements GameObject {
         int height = bm.getHeight();
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
         Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
         matrix.postScale(scaleWidth, scaleHeight);
-
-        // "RECREATE" THE NEW BITMAP
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         bm.recycle();
         return resizedBitmap;
+    }
+
+
+    public void playDeadScore() {
+        xPosDeadScore = xPos;
+        yPosDeadScore = yPos;
+        deadScoreTextSize=30;
+        startDeadScore = System.currentTimeMillis();
+        playDeadScore = true;
     }
 }

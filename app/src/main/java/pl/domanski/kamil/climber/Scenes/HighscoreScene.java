@@ -53,14 +53,30 @@ public class HighscoreScene implements Scene {
     public void draw(Canvas canvas) {
 
         canvas.drawColor(Color.rgb(0, 100, 200));
-        paint.setColor(Color.WHITE);
+
+        paint.setTypeface(Constans.font);
         paint.setTextSize(Constans.SCREEN_WIDTH / 5);
         drawCenterText(canvas, paint, "Highscore", Constans.SCREEN_HEIGHT / 5);
 
+        paint.setTextSize(Constans.SCREEN_HEIGHT / 10);
+        paint.setColor(Color.rgb(255,208,0));
+        canvas.drawText(1 + ". " + highscore[1 - 1], Constans.SCREEN_WIDTH / 8, Constans.SCREEN_HEIGHT * 1 / 4 + Constans.SCREEN_HEIGHT * 1 / 9, paint);
+
+        paint.setTextSize(Constans.SCREEN_HEIGHT / 11);
+        paint.setColor(Color.rgb(180,180,180));
+        canvas.drawText(2 + ". " + highscore[2 - 1], Constans.SCREEN_WIDTH / 8, Constans.SCREEN_HEIGHT * 1 / 4 + Constans.SCREEN_HEIGHT * 2 / 9, paint);
+
+        paint.setTextSize(Constans.SCREEN_HEIGHT / 12);
+        paint.setColor(Color.rgb(182,116,80));
+        canvas.drawText(3 + ". " + highscore[3 - 1], Constans.SCREEN_WIDTH / 8, Constans.SCREEN_HEIGHT * 1 / 4 + Constans.SCREEN_HEIGHT * 3 / 9, paint);
+
         paint.setTextSize(Constans.SCREEN_HEIGHT / 15);
-        for (int i = 1; i < highscore.length + 1; i++) {
-            canvas.drawText(i + ". " + highscore[i - 1], Constans.SCREEN_WIDTH / 8, Constans.SCREEN_HEIGHT * 1 / 4 + Constans.SCREEN_HEIGHT * i / 10, paint);
-        }
+        paint.setColor(Color.rgb(255,255,255));
+        canvas.drawText(4 + ". " + highscore[4 - 1], Constans.SCREEN_WIDTH / 8, Constans.SCREEN_HEIGHT * 1 / 4 + Constans.SCREEN_HEIGHT * 4 / 9, paint);
+        canvas.drawText(5 + ". " + highscore[5 - 1], Constans.SCREEN_WIDTH / 8, Constans.SCREEN_HEIGHT * 1 / 4 + Constans.SCREEN_HEIGHT * 5 / 9, paint);
+
+
+
     }
 
     @Override
@@ -99,7 +115,7 @@ public class HighscoreScene implements Scene {
 
     public void readHighscore() {
         for (int i = 0; i < highscore.length; i++) {
-            highscore[i] = sharedPreferences.getInt("Highscore" + i, -2);
+            highscore[i] = sharedPreferences.getInt("Highscore" + i, 0);
         }
     }
 

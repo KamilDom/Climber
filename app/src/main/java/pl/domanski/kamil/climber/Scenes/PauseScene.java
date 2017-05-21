@@ -58,8 +58,9 @@ public class PauseScene implements Scene {
         canvas.drawLine(Constans.SCREEN_WIDTH*6/7, Constans.SCREEN_HEIGHT*3/18, Constans.SCREEN_WIDTH*6/7,Constans.SCREEN_HEIGHT*15/18,paint);
         canvas.drawLine(Constans.SCREEN_WIDTH/7, Constans.SCREEN_HEIGHT*15/18, Constans.SCREEN_WIDTH*6/7,Constans.SCREEN_HEIGHT*15/18,paint);
         canvas.drawLine(Constans.SCREEN_WIDTH/7, Constans.SCREEN_HEIGHT*3/18, Constans.SCREEN_WIDTH/7,Constans.SCREEN_HEIGHT*15/18,paint);
-        paint.setTextSize(100);
-        paint.setColor(Color.MAGENTA);
+        paint.setTextSize(Constans.SCREEN_HEIGHT/17);
+        paint.setTypeface(Constans.font);
+        paint.setColor(Color.WHITE);
         canvas.drawText("Pause",(getCenterCorinate(canvas, "Pause")[0]), (float) (Constans.SCREEN_HEIGHT*29/120),paint);
 
         for (Button bu : buttons) {

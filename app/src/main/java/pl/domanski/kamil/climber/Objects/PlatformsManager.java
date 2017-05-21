@@ -13,7 +13,7 @@ import pl.domanski.kamil.climber.Engine.Constans;
 
 public class PlatformsManager {
 
-    private ArrayList<Platforms> platforms;
+    public ArrayList<Platforms> platforms;
     private int platformWidth;
     private int platformHeight;
 

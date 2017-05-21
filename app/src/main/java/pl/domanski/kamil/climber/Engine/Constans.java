@@ -1,6 +1,7 @@
 package pl.domanski.kamil.climber.Engine;
 
 import android.content.Context;
+import android.graphics.Typeface;
 
 // Przechowywanie stałych tzn: wymiaru ekranu, kontekstu
 
@@ -12,5 +13,6 @@ public class Constans {
 
     public static long INIT_TIME;
 
+    public static Typeface font;
 
 }

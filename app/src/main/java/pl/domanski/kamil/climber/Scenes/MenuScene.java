@@ -20,7 +20,7 @@ import pl.domanski.kamil.climber.Objects.Button;
 
 // Klasa odpowiedzialna za menu
 
-class MenuScene implements Scene {
+ public class MenuScene implements Scene {
 
     private Paint paint;
     private Rect r;
@@ -57,6 +57,7 @@ class MenuScene implements Scene {
     @Override
     public void draw(Canvas canvas) {
 
+        paint.setTypeface(Constans.font);
         canvas.drawColor(Color.rgb(0, 100 , 200));
         paint.setColor(Color.WHITE);
         paint.setTextSize(Constans.SCREEN_WIDTH / 5);
