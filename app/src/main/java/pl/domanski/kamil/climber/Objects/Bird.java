@@ -14,6 +14,7 @@ import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.Engine.MainActivity;
 import pl.domanski.kamil.climber.GameObject;
 import pl.domanski.kamil.climber.R;
+import pl.domanski.kamil.climber.Scenes.SceneManager;
 
 
 public class Bird implements GameObject {
@@ -91,8 +92,12 @@ public class Bird implements GameObject {
 
 
         if (exist) {
-            if (yPos < 0)
+            if (yPos < 0){
+                if(!SceneManager.GAMEOVER)
                 warning.draw(canvas, Constans.SCREEN_WIDTH / 10, Constans.SCREEN_HEIGHT / 19);
+            }
+
+
             animManager.draw(canvas, xPos, yPos);
         }
 

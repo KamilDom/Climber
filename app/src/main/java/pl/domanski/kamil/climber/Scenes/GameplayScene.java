@@ -32,13 +32,17 @@ public class GameplayScene implements Scene {
 
     private SceneManager sceneManager;
     protected PauseScene pauseScene;
-
+    private GameOverScene gameOverScene;
+    private float gameoverYSpeed;
+    private float gameoverYPlayerSpeed;
     private Paint paint;
+    private float yScore;
 
     public Player player;
     private Bird bird;
 
-    private PlatformsManager platformsManager;
+
+    public PlatformsManager platformsManager;
     BitmapFactory bf = new BitmapFactory();
     BitmapFactory.Options op = new BitmapFactory.Options();
     Bitmap sky;
@@ -51,39 +55,49 @@ public class GameplayScene implements Scene {
 
 
     public GameplayScene(SceneManager sceneManager) {
+        gameoverYSpeed = 0;
+        gameoverYPlayerSpeed = 0;
+        yScore = 0;
         op.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
         sky = getResizedBitmap(bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(), R.drawable.sky3), Constans.SCREEN_WIDTH, Constans.SCREEN_HEIGHT);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Constans.CURRENT_CONTEXT);
         editor = sharedPreferences.edit();
-        vibration=sharedPreferences.getBoolean("Vibration",false);
+        vibration = sharedPreferences.getBoolean("Vibration", false);
 
         sceneManager.PAUSE = false;
         this.sceneManager = sceneManager;
         paint = new Paint();
         pauseScene = new PauseScene(sceneManager);
-        platformsManager = new PlatformsManager((int) (Constans.SCREEN_WIDTH * 0.23), (int) (Constans.SCREEN_HEIGHT / 24));
+        //  platformsManager = new PlatformsManager((int) (Constans.SCREEN_WIDTH * 0.23), (int) (Constans.SCREEN_HEIGHT / 24));
+        platformsManager = new PlatformsManager((int) (Constans.SCREEN_WIDTH * 0.2), (int) (Constans.SCREEN_HEIGHT / 24));
+
         player = new Player(Constans.SCREEN_WIDTH / 2, Constans.SCREEN_HEIGHT * 4 / 5, Constans.SCREEN_WIDTH / 6,
                 Constans.SCREEN_HEIGHT / 8, sharedPreferences.getInt("Sensivity", 4), platformsManager);
 
 
         bird = new Bird((int) (Math.random() * Constans.SCREEN_WIDTH), 0, Constans.SCREEN_WIDTH / 145, 1, Constans.SCREEN_WIDTH * 5 / 24, Constans.SCREEN_HEIGHT / 13);
-
+        gameOverScene = new GameOverScene(player, sceneManager);
 
     }
 
     public void reset() {
-        sceneManager.setScene(0);
-        setHighscore();
-        platformsManager.reset();
+
+
         player.xPos = Constans.SCREEN_WIDTH / 2;
         player.yPos = Constans.SCREEN_HEIGHT * 4 / 5;
         SceneManager.PAUSE = false;
         pauseScene.showConfirmScene = false;
         player.jump((Constans.SCREEN_HEIGHT / 48));
-        SceneManager.GAMEOVER = false;
         bird.exist = false;
+        gameoverYSpeed = 0;
+        gameoverYPlayerSpeed = 0;
+        yScore = 0;
+        SceneManager.GAMEOVER = false;
+        gameOverScene.reset();
+        player.gameover = false;
+        platformsManager.reset();
 
     }
 
@@ -101,9 +115,11 @@ public class GameplayScene implements Scene {
             case MotionEvent.ACTION_DOWN:
 
 
-                if (SceneManager.GAMEOVER ) {
-                   reset();
-                } else if (SceneManager.PAUSE)
+                if (gameOverScene.gameover) {
+                    gameOverScene.recieveTouch(event);
+                }
+
+                if (SceneManager.PAUSE)
                     pauseScene.recieveTouch(event);
                 break;
 
@@ -122,22 +138,19 @@ public class GameplayScene implements Scene {
         bird.draw(canvas);
         player.draw(canvas);
         paint.setColor(Color.YELLOW);
-        paint.setTextSize(Constans.SCREEN_WIDTH / 20);
+        paint.setTextSize(Constans.SCREEN_WIDTH / 17);
         paint.setTypeface(Constans.font);
-        canvas.drawText("Score: " + String.valueOf(platformsManager.score), (float) (Constans.SCREEN_WIDTH/21.6), (float) (Constans.SCREEN_HEIGHT/30), paint);
+        canvas.drawText("Score: " + String.valueOf(platformsManager.score), (float) (Constans.SCREEN_WIDTH / 21.6), (float) (-yScore + Constans.SCREEN_HEIGHT / 30), paint);
 
 
-        if (SceneManager.GAMEOVER) {
-            paint.setTextSize(Constans.SCREEN_WIDTH / 11);
-            paint.setColor(Color.WHITE);
-            getCenterCorinate(canvas, "Game Over");
 
-            canvas.drawText("Game Over", (getCenterCorinate(canvas, "Game Over")[0]), (getCenterCorinate(canvas, "Game Over")[1]), paint);
-
-
-        } else if (sceneManager.PAUSE && !SceneManager.GAMEOVER) {
+        if (sceneManager.PAUSE && !SceneManager.GAMEOVER) {
             pauseScene.draw(canvas);
 
+        }
+
+        if (gameOverScene.gameover) {
+            gameOverScene.draw(canvas);
         }
 
 
@@ -183,22 +196,68 @@ public class GameplayScene implements Scene {
                         player.jump(Constans.SCREEN_HEIGHT / 48);
                         if (vibration)
                             v.vibrate(1);
-                        platformsManager.score+=200;
-                        bird.dead=true;
+                        platformsManager.score += 200;
+                        bird.dead = true;
                         bird.playDeadScore();
                     } else {
                         SceneManager.GAMEOVER = true;
+                        gameOverScene.gameover=true;
+                        player.gameover=true;
+                        gameOverScene.score=platformsManager.score;
+                        setHighscore();
                     }
 
                 }
-            } else if (!bird.exist && platformsManager.score > 200 && (int) (Math.random() * 1000) == 0) {
-                bird.reset();
+            } else if (!bird.exist && platformsManager.score > 100 && (int) (Math.random() * 100) == 0) {
+                bird.reset();         //bylo 1000
 
             }
 
-            if (player.yPos > Constans.SCREEN_HEIGHT) {
+            if (player.yPos > Constans.SCREEN_HEIGHT - player.playerHeight / 2) {
                 SceneManager.GAMEOVER = true;
+                gameOverScene.setGameover(true);
+                player.gameover = true;
+                gameoverYSpeed = (int) player.jumpVector();
+                gameOverScene.score=platformsManager.score;
+                setHighscore();
             }
+        } else if (gameOverScene.gameover) {
+            player.update();
+            if (platformsManager.platforms.get(platformsManager.platforms.size() - 1).rectangle.bottom > -Constans.SCREEN_HEIGHT / 2) {
+                platformsManager.update();
+                bird.update();
+
+                if(platformsManager.platforms.get(platformsManager.platforms.size()-1).getRectangle().bottom>-Constans.SCREEN_HEIGHT/2){
+                    platformsManager.incrementY(gameoverYSpeed);
+                }
+
+
+                if(bird.getBirdRect().bottom>0){
+                    bird.incrementY(gameoverYSpeed);
+                }
+
+                gameoverYSpeed -= 1;
+                gameOverScene.setWindowSpeed(gameoverYSpeed);
+
+
+                if (player.yPos > Constans.SCREEN_HEIGHT * 1 / 10) {
+                    player.yPos -= gameoverYPlayerSpeed;
+                    gameoverYPlayerSpeed += 0.5;
+                } else
+                    gameoverYPlayerSpeed = 0;
+            } else {
+
+                if (player.yPos < Constans.SCREEN_HEIGHT) {
+                    player.yPos += gameoverYPlayerSpeed;
+                    gameoverYPlayerSpeed += 3;
+                }
+                gameOverScene.update();
+            }
+
+            if(gameOverScene.yStart<Constans.SCREEN_HEIGHT+10){
+                yScore -= gameoverYSpeed/(Constans.SCREEN_HEIGHT/100);
+            }
+
         }
     }
 

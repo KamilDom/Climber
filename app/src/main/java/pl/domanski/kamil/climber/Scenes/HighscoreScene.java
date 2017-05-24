@@ -14,9 +14,7 @@ import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.Engine.OrientationData;
 import pl.domanski.kamil.climber.Objects.Button;
 
-/**
- * Created by Kamil on 30.03.2017.
- */
+
 
 public class HighscoreScene implements Scene {
 

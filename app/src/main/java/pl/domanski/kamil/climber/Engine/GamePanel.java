@@ -13,10 +13,6 @@ import android.view.SurfaceView;
 import pl.domanski.kamil.climber.Scenes.SceneManager;
 
 
-/**
- * Created by Kamil on 19.03.2017.
- */
-
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     private MainThread thread;
@@ -45,7 +41,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         thread = new MainThread(getHolder(),this);
-        Constans.INIT_TIME = System.currentTimeMillis();
         thread.setRunning(true);
         thread.start();
     }
@@ -87,9 +82,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         super.draw(canvas);
         manager.draw(canvas);
-        paint.setTextSize(50);
-        paint.setColor(Color.YELLOW);
-        canvas.drawText("FPS: " + String.valueOf(thread.averageFPS),Constans.SCREEN_WIDTH-300,50,paint);
+     //   paint.setTextSize(50);
+      //  paint.setColor(Color.YELLOW);
+      //  canvas.drawText("FPS: " + String.valueOf(thread.averageFPS),Constans.SCREEN_WIDTH-300,50,paint);
     }
 
     public static void OnBackPressed() {

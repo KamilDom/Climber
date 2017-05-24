@@ -3,6 +3,7 @@ package pl.domanski.kamil.climber.Objects;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -19,7 +20,7 @@ public class PlatformsManager {
 
     public int indexColide;
     private int lastX = 0;
-
+    private int yStart;
 
     private int xStart;
     public int score = 0;
@@ -49,10 +50,37 @@ public class PlatformsManager {
 
     public void reset() {
         score = 0;
-        for (int i = platforms.size() - 1; i > -1; i--) {
-            platforms.remove(i);
+
+        xStart = rand.nextInt(Constans.SCREEN_WIDTH - platformWidth);
+        lastX = xStart;
+        platforms.get(platforms.size()-1).platformType = 0;
+        platforms.get(platforms.size()-1).setStartXY(xStart,Constans.SCREEN_HEIGHT - platformHeight);
+
+        for(int i =platforms.size()-2; i>-1;i--){
+            xStart = rand.nextInt(Constans.SCREEN_WIDTH - platformWidth);
+
+            while (Math.abs(lastX - xStart) < Constans.SCREEN_WIDTH / 5){
+                xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH - platformWidth));
+            }
+
+            lastX = xStart;
+            yStart = rand.nextInt(Constans.SCREEN_HEIGHT/19);
+
+            platforms.get(i).setStartXY(xStart,platforms.get(i+1).getRectangle().top-yStart-(int)(Constans.SCREEN_HEIGHT/6.4));
+            platforms.get(i).setPlatType(randPlatformType());
+            if (platforms.get(i).platformType == 1) {
+
+                GenerateMovingPlatformPostition(i);
+
+            }
+
         }
-        generatePlatforms();
+
+    /*    for (int i = platforms.size() - 1; i > -1; i--) {
+            platforms.remove(i);
+        }*/
+
+     //   generatePlatforms();
     }
 
     public boolean playerCollide(Player player) {
@@ -78,14 +106,12 @@ public class PlatformsManager {
     }
 
     private void generatePlatforms() {
-/*
-      TODO  Tu musze poprawic startową platforme                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111
 
 
-        platforms.add(new Platforms(platformHeight, Constans.SCREEN_WIDTH, 0, Constans.SCREEN_HEIGHT - platformHeight, 0));
-        platforms.get(0).platformType = 0;*/
+        xStart = rand.nextInt(Constans.SCREEN_WIDTH - platformWidth);
+        lastX = xStart;
 
-        platforms.add(new Platforms(platformHeight, platformWidth, 0, Constans.SCREEN_HEIGHT - platformHeight, 0));
+        platforms.add(new Platforms(platformHeight, platformWidth, xStart, Constans.SCREEN_HEIGHT - platformHeight, 0));
         platforms.get(0).platformType = 0;
         int currY = (int) (-Constans.SCREEN_HEIGHT * 3 / 4);
 
@@ -99,14 +125,14 @@ public class PlatformsManager {
 
 
             lastX = xStart;
-            int y = rand.nextInt(Constans.SCREEN_HEIGHT/19);
-            platforms.add(0, new Platforms(platformHeight, platformWidth, xStart, ((int)(-Constans.SCREEN_HEIGHT/6.4) + platforms.get(0).getRectangle().top - y), randPlatformType()));
+            yStart = rand.nextInt(Constans.SCREEN_HEIGHT/19);
+            platforms.add(0, new Platforms(platformHeight, platformWidth, xStart, ((int)(-Constans.SCREEN_HEIGHT/6.4) + platforms.get(0).getRectangle().top - yStart), randPlatformType()));
             if (platforms.get(0).platformType == 1) {
 
-                GenerateMovingPlatformPostition();
+                GenerateMovingPlatformPostition(0);
 
             }
-            currY += platformHeight + y;
+            currY += platformHeight + yStart;
         }
 
     }
@@ -161,7 +187,7 @@ public class PlatformsManager {
         platforms.get(0).platformType = randPlatformType();
         if (platforms.get(0).platformType == 1) {
 
-            GenerateMovingPlatformPostition();
+            GenerateMovingPlatformPostition(0);
 
         }
 
@@ -172,16 +198,16 @@ public class PlatformsManager {
 
     }
 
-    private void GenerateMovingPlatformPostition() {
+    private void GenerateMovingPlatformPostition(int index) {
 
-        platforms.get(0).howFar = rand.nextInt((int)(Constans.SCREEN_WIDTH/2.7) - 7);
-        platforms.get(0).direction = 1;
+        platforms.get(index).howFar = rand.nextInt((int)(Constans.SCREEN_WIDTH/2.7) - 7);
+        platforms.get(index).direction = 1;
 
         xStart = (int) (Math.random() * (Constans.SCREEN_WIDTH/3.86 - platformWidth) + Constans.SCREEN_WIDTH/2.7);
 
 
-        platforms.get(0).getRectangle().left = xStart;
-        platforms.get(0).getRectangle().right = xStart + platformWidth;
+        platforms.get(index).getRectangle().left = xStart;
+        platforms.get(index).getRectangle().right = xStart + platformWidth;
 
     }
 
@@ -210,10 +236,8 @@ public class PlatformsManager {
         paint.setColor(Color.WHITE);
 
         for (Platforms pl : platforms) {
-
             pl.draw(canvas);
         }
-
 
 
 

@@ -25,6 +25,8 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
     public int howFar = (int)(Constans.SCREEN_WIDTH/2.7);
     private int movPlatinc = (int)(Constans.SCREEN_WIDTH/180);
     private boolean playAnim = false;
+    private int platformHeight;
+    private int platformWidth;
 
 
     BitmapFactory bf = new BitmapFactory();
@@ -56,10 +58,22 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
 
     }
 
+    public void setStartXY(int startX, int startY){
+        rectangle.left=startX;
+        rectangle.right=startX+platformWidth;
+        rectangle.top=startY;
+        rectangle.bottom=startY+platformHeight;
+    }
+
+    public void setPlatType(int platType){
+        platformType=platType;
+    }
 
     public Platforms(int platformHeight, int platformWidth, int startX, int startY, int platType) {
 
         paint = new Paint();
+        this.platformWidth=platformWidth;
+        this.platformHeight=platformHeight;
         platform1 = getResizedBitmap(platform1 ,platformWidth,platformHeight);
         platform2 = getResizedBitmap(platform2 ,platformWidth,platformHeight);
         platform_super = getResizedBitmap(platform_super ,platformWidth,platformHeight);
@@ -113,6 +127,7 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
 
 
         }
+
     }
 
     private void movingPlatform() {
@@ -151,11 +166,12 @@ public class Platforms implements pl.domanski.kamil.climber.GameObject {
 
     @Override
     public void update() {
-        if (!SceneManager.PAUSE && !SceneManager.GAMEOVER && platformType == 1)
+        if (!SceneManager.PAUSE  && platformType == 1)
             movingPlatform();
     }
 
     public void playAnim(){
+
         playAnim=true;
     }
 

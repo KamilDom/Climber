@@ -23,7 +23,7 @@ public class Button implements GameObject{
     private String buttonText;
     private int textSize;
     Paint paint;
-    private Rect buttonRect;
+    public Rect buttonRect;
     private int textColor;
     private int buttonColor;
 
@@ -118,5 +118,9 @@ public class Button implements GameObject{
 
     public void updateText(String text){
         buttonText = text;
+    }
+
+    public void setStartY(int startY) {
+        this.startY = startY;
     }
 }

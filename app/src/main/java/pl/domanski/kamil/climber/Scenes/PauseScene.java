@@ -50,7 +50,8 @@ public class PauseScene implements Scene {
     @Override
     public void draw(Canvas canvas) {
 
-        paint.setColor(Color.rgb( 0, 100 , 200));
+     //   paint.setColor(Color.rgb( 0, 100 , 200));
+        paint.setColor(Color.argb( 200,0, 100 , 200));
         canvas.drawRect(Constans.SCREEN_WIDTH/7, Constans.SCREEN_HEIGHT*3/18, Constans.SCREEN_WIDTH*6/7, Constans.SCREEN_HEIGHT*15/18, paint);
         paint.setStrokeWidth(5);
         paint.setColor(Color.rgb(0,0,0));

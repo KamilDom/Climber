@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import pl.domanski.kamil.climber.Animations.Animation;
 import pl.domanski.kamil.climber.Animations.AnimationManager;
@@ -28,14 +29,17 @@ public class Player implements GameObject {
 
     public int sensivity;
 
-   /* private Animation idle;
-    private Animation walkRight;
-    private Animation walkLeft;*/
+
    private Animation upRight;
     private Animation upLeft;
     private Animation downRight;
     private Animation downLeft;
+    private Animation deadRight;
+    private Animation deadLeft;
+
+
     private AnimationManager animManager;
+
     int state;
 
     private PlatformsManager platformsManager;
@@ -45,6 +49,8 @@ public class Player implements GameObject {
     private float jumpVector;
 
     public int jumpState = 0;
+    public boolean gameover;
+
 
     public Player(int xPos, int yPos, int playerWidth, int playerHeight, int sensivity, PlatformsManager platformsManager) {
         this.xPos = xPos;
@@ -53,38 +59,50 @@ public class Player implements GameObject {
         this.playerHeight = playerHeight;
         this.platformsManager = platformsManager;
         this.sensivity = sensivity;
+        gameover=false;
 
         orientationData = new OrientationData();
         orientationData.register();
 
         BitmapFactory bf = new BitmapFactory();
 
+
         Bitmap upImg = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
                 R.drawable.boy_rise);
         Bitmap downImg = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
                 R.drawable.boy_fall);
+        Bitmap deadImg = bf.decodeResource(Constans.CURRENT_CONTEXT.getResources(),
+                R.drawable.boy_dead);
+
 
         upImg = getResizedBitmap(upImg, playerWidth, playerHeight);
         downImg = getResizedBitmap(downImg, playerWidth, playerHeight);
+        deadImg = getResizedBitmap(deadImg, playerWidth, playerHeight);
 
         upRight = new Animation(new Bitmap[]{upImg}, 2);
         downRight = new Animation(new Bitmap[]{downImg}, 2);
+        deadRight = new Animation(new Bitmap[]{deadImg}, 2);
+
 
         Matrix m = new Matrix();
         m.preScale(-1, 1);
         upImg = Bitmap.createBitmap(upImg, 0, 0, upImg.getWidth(), upImg.getHeight(), m, false);
         downImg = Bitmap.createBitmap(downImg, 0, 0, downImg.getWidth(), downImg.getHeight(), m, false);
+        deadImg = Bitmap.createBitmap(deadImg, 0, 0, deadImg.getWidth(), deadImg.getHeight(), m, false);
 
         upLeft = new Animation(new Bitmap[]{upImg}, 2);
         downLeft = new Animation(new Bitmap[]{downImg}, 2);
+        deadLeft = new Animation(new Bitmap[]{deadImg}, 2);
 
-        animManager = new AnimationManager(new Animation[]{upRight,downRight, upLeft,downLeft});
+        animManager = new AnimationManager(new Animation[]{upRight,downRight, upLeft,downLeft,deadRight,deadLeft});
+
     }
 
     @Override
     public void draw(Canvas canvas) {
 
         animManager.draw(canvas, xPos, yPos);
+
     }
 
     @Override
@@ -101,50 +119,74 @@ public class Player implements GameObject {
         else if (xPos > Constans.SCREEN_WIDTH - playerWidth / 2)
             xPos = -playerWidth / 2;
 
-        if (jumpState == 1) {
-            yPos -= jumpVector();
-        } else {
-            if (yPos > Constans.SCREEN_HEIGHT * 7 / 24) {
+        if(!gameover){
+            if (jumpState == 1) {
                 yPos -= jumpVector();
             } else {
-                platformsManager.incrementY(jumpVector());
+                if (yPos > Constans.SCREEN_HEIGHT * 7 / 24) {
+                    yPos -= jumpVector();
+                } else {
+                    platformsManager.incrementY(jumpVector());
+                }
             }
+
+            if (xPos - oldX > 3 && jumpState == 0){
+                state = 0;
+            }
+
+            else if (xPos - oldX > 3 && jumpState == 1){
+                state = 1;
+            }
+
+            else if (xPos - oldX <-3 && jumpState == 0){
+                state = 2;
+            }
+
+            else if (xPos - oldX <-3 && jumpState == 1){
+                state = 3;
+            }
+
+            else if(state==0&&jumpState==1){
+                state=1;
+            }
+            else if(state==1&&jumpState==0){
+                state=0;
+            }
+
+            else if(state==2&&jumpState==1){
+                state=3;
+            }
+            else if(state==3&&jumpState==0){
+                state=2;
+            }
+
+            else if(state==5)
+                state=2;
+
+            else if(state==4)
+                state=0;
+        }
+        else{
+            if(xPos - oldX > 3){
+                state=4;
+            }
+            else if(xPos - oldX <-3){
+                state=5;
+            }
+            else if(state==3 || state ==2)
+                state=5;
+
+            else if(state==1 || state ==0)
+                state=4;
         }
 
 
-        if (xPos - oldX > 3 && jumpState == 0){
-            state = 0;
-        }
 
-        else if (xPos - oldX > 3 && jumpState == 1){
-            state = 1;
-        }
-
-        else if (xPos - oldX <-3 && jumpState == 0){
-            state = 2;
-        }
-
-        else if (xPos - oldX <-3 && jumpState == 1){
-            state = 3;
-        }
-
-        else if(state==0&&jumpState==1){
-            state=1;
-        }
-        else if(state==1&&jumpState==0){
-            state=0;
-        }
-
-        else if(state==2&&jumpState==1){
-            state=3;
-        }
-        else if(state==3&&jumpState==0){
-            state=2;
-        }
 
 
         animManager.playAnim(state);
         animManager.update();
+
     }
 
     public void jump(int extraJump) {
