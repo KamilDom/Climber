@@ -15,6 +15,7 @@ import pl.domanski.kamil.climber.Engine.OrientationData;
 import pl.domanski.kamil.climber.Objects.Button;
 
 
+// Klasa do wyswietlania i zarzadzania menu najlepszych wynikow
 
 public class HighscoreScene implements Scene {
 

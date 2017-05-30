@@ -18,7 +18,7 @@ import pl.domanski.kamil.climber.Objects.Button;
 
 
 
-// Klasa odpowiedzialna za menu
+// Klasa do wyswietlania i zarzadzania menu glownego
 
  public class MenuScene implements Scene {
 

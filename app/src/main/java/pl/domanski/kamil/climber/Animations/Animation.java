@@ -5,9 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-/**
- * Created by Kamil on 19.03.2017.
- */
+// Klasa do animacji, klasa ta rysuje w zapetleniu wszystkie klatki animacji
 
 public class Animation {
 

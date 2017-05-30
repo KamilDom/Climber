@@ -1,10 +1,8 @@
-package pl.domanski.kamil.climber;
+package pl.domanski.kamil.climber.Objects;
 
 import android.graphics.Canvas;
 
-/**
- * Created by Kamil on 12.03.2017.
- */
+// interface ktory implementuja wszystkie obiekty gry
 
 public interface GameObject
 {

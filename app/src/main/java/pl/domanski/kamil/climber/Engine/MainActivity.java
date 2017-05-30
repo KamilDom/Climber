@@ -10,6 +10,11 @@ import android.view.WindowManager;
 
 import pl.domanski.kamil.climber.Scenes.SceneManager;
 
+
+// Klasa glownej aktywnosci
+// W tej klasie ustawione jest wyswietlanie klasy GamePanel ktora dziedziczy po SurfaceView
+
+
 public class MainActivity extends Activity {
 
     private GamePanel gamePanel;

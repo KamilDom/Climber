@@ -3,9 +3,7 @@ package pl.domanski.kamil.climber.Scenes;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
-/**
- * Created by Kamil on 19.03.2017.
- */
+// interface ktory implementuja wszystkie sceny w grze
 
 public interface Scene {
 

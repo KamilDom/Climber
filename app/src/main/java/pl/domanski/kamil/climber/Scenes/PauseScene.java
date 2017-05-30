@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.Objects.Button;
 
-/**
- * Created by Kamil on 07.04.2017.
- */
+// Klasa do wyswietlania i zarzadzania menu pauzy
 
 public class PauseScene implements Scene {
 

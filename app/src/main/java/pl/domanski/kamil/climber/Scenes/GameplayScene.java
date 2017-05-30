@@ -23,7 +23,8 @@ import pl.domanski.kamil.climber.Objects.Player;
 import pl.domanski.kamil.climber.R;
 
 
-//Główna klasa gameplayu
+//Główna klasa gameplayu - sterowanie cala rozgrywka
+
 
 public class GameplayScene implements Scene {
 
@@ -70,7 +71,6 @@ public class GameplayScene implements Scene {
         this.sceneManager = sceneManager;
         paint = new Paint();
         pauseScene = new PauseScene(sceneManager);
-        //  platformsManager = new PlatformsManager((int) (Constans.SCREEN_WIDTH * 0.23), (int) (Constans.SCREEN_HEIGHT / 24));
         platformsManager = new PlatformsManager((int) (Constans.SCREEN_WIDTH * 0.2), (int) (Constans.SCREEN_HEIGHT / 24));
 
         player = new Player(Constans.SCREEN_WIDTH / 2, Constans.SCREEN_HEIGHT * 4 / 5, Constans.SCREEN_WIDTH / 6,
@@ -143,7 +143,6 @@ public class GameplayScene implements Scene {
         canvas.drawText("Score: " + String.valueOf(platformsManager.score), (float) (Constans.SCREEN_WIDTH / 21.6), (float) (-yScore + Constans.SCREEN_HEIGHT / 30), paint);
 
 
-
         if (sceneManager.PAUSE && !SceneManager.GAMEOVER) {
             pauseScene.draw(canvas);
 
@@ -201,15 +200,15 @@ public class GameplayScene implements Scene {
                         bird.playDeadScore();
                     } else {
                         SceneManager.GAMEOVER = true;
-                        gameOverScene.gameover=true;
-                        player.gameover=true;
-                        gameOverScene.score=platformsManager.score;
+                        gameOverScene.gameover = true;
+                        player.gameover = true;
+                        gameOverScene.score = platformsManager.score;
                         setHighscore();
                     }
 
                 }
-            } else if (!bird.exist && platformsManager.score > 100 && (int) (Math.random() * 100) == 0) {
-                bird.reset();         //bylo 1000
+            } else if (!bird.exist && platformsManager.score > 100 && (int) (Math.random() * 700) == 0) {
+                bird.reset();
 
             }
 
@@ -218,7 +217,7 @@ public class GameplayScene implements Scene {
                 gameOverScene.setGameover(true);
                 player.gameover = true;
                 gameoverYSpeed = (int) player.jumpVector();
-                gameOverScene.score=platformsManager.score;
+                gameOverScene.score = platformsManager.score;
                 setHighscore();
             }
         } else if (gameOverScene.gameover) {
@@ -227,12 +226,12 @@ public class GameplayScene implements Scene {
                 platformsManager.update();
                 bird.update();
 
-                if(platformsManager.platforms.get(platformsManager.platforms.size()-1).getRectangle().bottom>-Constans.SCREEN_HEIGHT/2){
+                if (platformsManager.platforms.get(platformsManager.platforms.size() - 1).getRectangle().bottom > -Constans.SCREEN_HEIGHT / 2) {
                     platformsManager.incrementY(gameoverYSpeed);
                 }
 
 
-                if(bird.getBirdRect().bottom>0){
+                if (bird.getBirdRect().bottom > 0) {
                     bird.incrementY(gameoverYSpeed);
                 }
 
@@ -254,8 +253,8 @@ public class GameplayScene implements Scene {
                 gameOverScene.update();
             }
 
-            if(gameOverScene.yStart<Constans.SCREEN_HEIGHT+10){
-                yScore -= gameoverYSpeed/(Constans.SCREEN_HEIGHT/100);
+            if (gameOverScene.yStart < Constans.SCREEN_HEIGHT + 10) {
+                yScore -= gameoverYSpeed / (Constans.SCREEN_HEIGHT / 100);
             }
 
         }

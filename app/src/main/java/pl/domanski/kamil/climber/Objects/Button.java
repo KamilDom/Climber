@@ -10,9 +10,13 @@ import android.graphics.Typeface;
 import android.view.MotionEvent;
 
 import pl.domanski.kamil.climber.Engine.Constans;
-import pl.domanski.kamil.climber.GameObject;
+import pl.domanski.kamil.climber.Objects.GameObject;
 import pl.domanski.kamil.climber.R;
 
+
+// klasa do przyciskow - klasa skaluje grafiki potrzebne do narysownia przycisku o zadanych wymiarach,
+// oblicza wspolrzedene potrzebne do narysowania tekstu.
+// Kazdy obiekt tej klasy ma tez swoja funkcje onClick
 
 public class Button implements GameObject{
 

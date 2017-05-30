@@ -12,10 +12,11 @@ import pl.domanski.kamil.climber.Animations.Animation;
 import pl.domanski.kamil.climber.Animations.AnimationManager;
 import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.Engine.MainActivity;
-import pl.domanski.kamil.climber.GameObject;
+import pl.domanski.kamil.climber.Objects.GameObject;
 import pl.domanski.kamil.climber.R;
 import pl.domanski.kamil.climber.Scenes.SceneManager;
 
+// klasa jednego z obiektow gry - przeszkody w postaci ptaka
 
 public class Bird implements GameObject {
 

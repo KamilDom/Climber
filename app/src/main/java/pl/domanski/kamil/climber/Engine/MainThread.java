@@ -5,7 +5,7 @@ import android.view.SurfaceHolder;
 
 import pl.domanski.kamil.climber.Engine.GamePanel;
 
-// Klasa odpowiedzialna za główny wątek gry - zegar
+// Klasa odpowiedzialna za główny wątek gry, odmierza czas miedzy klatkami gry
 
 public class MainThread extends Thread {
 

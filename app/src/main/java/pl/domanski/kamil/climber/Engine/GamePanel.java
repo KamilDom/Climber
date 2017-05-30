@@ -2,22 +2,20 @@ package pl.domanski.kamil.climber.Engine;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import pl.domanski.kamil.climber.Scenes.SceneManager;
 
+
+// Glowna klasa - w niej tworzony jest wątek gry oraz nadpisywana jest metoda rysowania
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     private MainThread thread;
     private static SceneManager manager;
-    Paint paint = new Paint();
 
 
     public GamePanel(Context context){
@@ -82,9 +80,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         super.draw(canvas);
         manager.draw(canvas);
-     //   paint.setTextSize(50);
-      //  paint.setColor(Color.YELLOW);
-      //  canvas.drawText("FPS: " + String.valueOf(thread.averageFPS),Constans.SCREEN_WIDTH-300,50,paint);
+
     }
 
     public static void OnBackPressed() {

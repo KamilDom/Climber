@@ -17,9 +17,9 @@ import pl.domanski.kamil.climber.Engine.GamePanel;
 import pl.domanski.kamil.climber.Engine.MainActivity;
 import pl.domanski.kamil.climber.Objects.Button;
 
-/**
- * Created by Kamil on 03.04.2017.
- */
+
+// Klasa do wyswietlania i zarzadzania menu ustawien
+
 public class SettingsScene implements Scene {
 
 

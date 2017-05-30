@@ -8,9 +8,7 @@ import java.util.ArrayList;
 
 import pl.domanski.kamil.climber.Engine.Constans;
 
-/**
- * Created by Kamil on 19.03.2017.
- */
+// Klasa do zarzadzania ktora ze scen ma się wyswietlac
 
 public class SceneManager {
 

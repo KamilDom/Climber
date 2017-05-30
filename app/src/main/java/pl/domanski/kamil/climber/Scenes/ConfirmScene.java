@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.Objects.Button;
 
-/**
- * Created by Kamil on 08.04.2017.
- */
+// // Klasa do wyswietlanie i zarzadzania menu potwierdzenia
 
 public class ConfirmScene implements Scene {
 

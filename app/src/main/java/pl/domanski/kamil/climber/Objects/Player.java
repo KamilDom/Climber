@@ -13,12 +13,12 @@ import pl.domanski.kamil.climber.Animations.Animation;
 import pl.domanski.kamil.climber.Animations.AnimationManager;
 import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.Engine.OrientationData;
-import pl.domanski.kamil.climber.GameObject;
+import pl.domanski.kamil.climber.Objects.GameObject;
 import pl.domanski.kamil.climber.R;
 
-/**
- * Created by Kamil on 16.04.2017.
- */
+// Klasa gracza - wszystko co dotyczu obiektu postaci zaimplemetowae jest w tej klasie tzn:
+// odczytywanie danych z klasy Orientationa data do poruszania sie, skakanie
+
 
 public class Player implements GameObject {
 
@@ -109,7 +109,6 @@ public class Player implements GameObject {
     public void update() {
         float oldX = xPos;
 
-        // TODO zoptymalizowac poruszanie dla różnych rozdzielczości
 
         xPos -= Math.abs(orientationData.getOrientation() * 10) * sensivity / (Constans.SCREEN_WIDTH / 120) > (Constans.SCREEN_WIDTH / 270) ?
                 orientationData.getOrientation() * sensivity / (Constans.SCREEN_WIDTH / 120) * 10 : 0;

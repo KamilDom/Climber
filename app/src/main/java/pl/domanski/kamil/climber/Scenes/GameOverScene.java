@@ -12,9 +12,7 @@ import pl.domanski.kamil.climber.Engine.Constans;
 import pl.domanski.kamil.climber.Objects.Button;
 import pl.domanski.kamil.climber.Objects.Player;
 
-/**
- * Created by Kamil on 18.04.2017.
- */
+// Klasa do wyswietlanie i zarzadzania menu konca gry
 
 public class GameOverScene implements Scene {
 

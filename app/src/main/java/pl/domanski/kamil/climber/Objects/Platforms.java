@@ -15,7 +15,7 @@ import pl.domanski.kamil.climber.Scenes.SceneManager;
 
 // Klasa w której zdefiniowane są parametry platform. Jeden obiekt tej klasy - jedna platforma
 
-public class Platforms implements pl.domanski.kamil.climber.GameObject {
+public class Platforms implements GameObject {
 
     public Rect rectangle;
 

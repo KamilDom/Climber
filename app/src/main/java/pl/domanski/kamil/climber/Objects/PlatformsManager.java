@@ -76,11 +76,6 @@ public class PlatformsManager {
 
         }
 
-    /*    for (int i = platforms.size() - 1; i > -1; i--) {
-            platforms.remove(i);
-        }*/
-
-     //   generatePlatforms();
     }
 
     public boolean playerCollide(Player player) {
